@@ -20,7 +20,7 @@ export default function config(cli) {
 							},
 							name: {
 								type: 'string',
-								required: false,
+								required: true,
 								short: 'm',
 								description: 'the name of the model'
 							}

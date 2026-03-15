@@ -20,22 +20,12 @@ export default class HugfcCommand extends Command {
 			return
 
 		switch (action) {
-			case 'card': {
-				const argModel = 'model'
-				let modelName = null
+			case 'card':
 
-				if (com?.config?.options?.[argModel] || com?.config?.options?.[argModel] === undefined) {
-					modelName = this.getPositionalArg(com, args, argModel, 1)
-				}
-				if (!modelName) {
-					const argName = 'name'
-					modelName = this.getPositionalArg(com, args, argName, 1)
-				}
-
-				if (!modelName) {
-					this.parameterMissing(argModel)
+				const argName = 'name'
+				const name = this.getValue(com, args, argName)
+				if (!this.checkParameter(com, argName, name))
 					return
-				}
 
 				const scriptPath = path.join(
 					process.cwd(),
@@ -95,10 +85,9 @@ export default class HugfcCommand extends Command {
 				})
 
 				break
-			}
 
 			default:
-				this.emitCommandError(`Unknown action: ${action}`)
+				this.emitCommandError(`Unknown action: ${action} `)
 		}
 	}
 }
