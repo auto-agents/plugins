@@ -6,7 +6,7 @@ update the property `cli.commands` in file `modules/hugging-face/module/config/c
 
 Implements a command implementation body in the run method of the command class. The body must find one parameter in `args` named `model`. It must call the python cli tool `modules/hugging-face/src/get_model_card/cli.py <modelName>` passing the model name as argument.
 
-Use as a model the command class in `cli/source/commands/dialog-command.js` and its command descriptor in the file `cli/source/config/config.js`, the entry with `names: ['dialog', 'dial', 'd']`
+Use as a model the command class in `cli/source/commands/agent-command.js` and its command descriptor in the file `cli/source/config/config.js`, the entry with `names: ['agent', 'ag', 'a']`
 
 The command `hugfc` is used to access to the web service hugging face.
 - The action `model` of the command implements the output of the `markdown` text returned by the python tool `cli.py`
