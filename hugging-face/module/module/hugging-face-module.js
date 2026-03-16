@@ -1,7 +1,7 @@
 export default class HuggingFaceModule {
 
 	constructor(ctx, outputContext, moduleSpec) {
-		this.moduleSpec = moduleSpec
+		this.specification = moduleSpec
 		this.ctx = ctx
 		this.outputContext = outputContext
 	}
@@ -24,7 +24,7 @@ export default class HuggingFaceModule {
 
 		this.ctx.components.module.huggingFace = null
 		o.newLine()
-		o.appendLine(margin + '- module unloaded: ' + this.moduleSpec.moduleId)
+		o.appendLine(margin + '- module unloaded: ' + this.specification.moduleId)
 
 		// include this comment as an implementation example for further devevelopment
 		/*
@@ -38,7 +38,7 @@ export default class HuggingFaceModule {
 			o,
 			stopSrv,
 			new SpinnerService(this.ctx, o)
-				.newSpinner(margin + '- stopping module <module_name>: ' + this.moduleSpec.moduleId, cliSpinners.sand)
+				.newSpinner(margin + '- stopping module <module_name>: ' + this.specification.moduleId, cliSpinners.sand)
 		)
 		await stopSrvAction.run()
 		*/

@@ -75,7 +75,7 @@ use this code example as pattern:
 export default class MyModule {
 
     constructor(ctx, outputContext, moduleSpec)
-        this.moduleSpec = moduleSpec
+        this.specification = moduleSpec
         this.ctx = ctx
         this.outputContext = outputContext
     }
@@ -109,7 +109,7 @@ export default class MyModule {
             o,
             stopSrv,
             new SpinnerService(this.ctx, o)
-                .newSpinner(margin + '- stopping module <module_name>: ' + this.moduleSpec.moduleId, cliSpinners.sand)
+                .newSpinner(margin + '- stopping module <module_name>: ' + this.specification.moduleId, cliSpinners.sand)
         )
         await stopSrvAction.run()        
         */
