@@ -187,6 +187,8 @@ export default class HugfcCommand extends Command {
 		['chain-of-thought']: 'COT', //'🧠',
 		['vision']: 'VI', //'👁️',
 		['conversational']: 'C', //'🗣️',
+		['multimodal']: 'MM',
+		['reasoning']: 'R',
 
 		['endpoints_compatible']: 'EC', //'🖥️',
 
@@ -207,7 +209,9 @@ export default class HugfcCommand extends Command {
 
 		['transformers']: 'TR',
 		['diffusers']: 'DI',
-		['safetensors']: 'ST'
+		['safetensors']: 'ST',
+
+		['uncensored']: 'U'
 	}
 
 	toLittleJson(modelInfo) {
