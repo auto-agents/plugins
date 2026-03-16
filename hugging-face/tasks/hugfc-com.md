@@ -42,3 +42,11 @@ The command descriptor is given below:
     file: 'hugfc-command.js'
 }
 ```
+
+## about the action value: 'fetch'
+
+this command allows to fetch informations about models from the **hugging face REST API**.
+- a JSON document is obtained from a `GET` request to the **URL** definied in the module specification `this.ctx.modules.huggingFace.config.urls.fetchModels`
+- the implementation of the action `fetch` performs the **GET request** at this URL and get a JSON document listing models
+- then the `fetch` construct a `Javascript` object that is stored in the property `this.ctx.modules.huggingFace.models`, the objects have a structure that match the **JSON** properties
+- then the `fetch` command output the number of models founded

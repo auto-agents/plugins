@@ -9,7 +9,13 @@ export default function config(cli) {
 				autoLoad: true,
 				enabled: true,
 				isLoaded: false,
-				internal: false
+				internal: false,
+
+				config: {
+					urls: {
+						fetchModels: 'https://huggingface.co/api/models'
+					}
+				}
 			}
 		},
 		cli: {
