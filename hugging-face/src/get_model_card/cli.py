@@ -22,7 +22,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         card = ModelCard.load(args.model_id)
     except Exception as e:
-        sys.stderr.write(f"Error: failed to load model card for '{args.model_id}': {e}\n")
+        sys.stderr.write(f"failed to load model card for '{args.model_id}': {e}\n")
         return 2
 
     if args.json:
