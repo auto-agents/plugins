@@ -28,15 +28,15 @@ export default class HuggingFaceModule {
 
 		// include this comment as an implementation example for further devevelopment
 		/*
-		const stopSrv = async () => {
-			this.ctx.components.module.AIAgent = null
+		const stopAct = async () => {
+			// TODO ...
 		}
 
 		o.newLine()
 		const stopSrvAction = new ActionController(
 			this.ctx,
 			o,
-			stopSrv,
+			stopAct,
 			new SpinnerService(this.ctx, o)
 				.newSpinner(margin + '- stopping module <module_name>: ' + this.specification.moduleId, cliSpinners.sand)
 		)
