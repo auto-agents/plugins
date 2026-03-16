@@ -32,6 +32,10 @@ export default function config(cli) {
 									{
 										value: 'card',
 										description: 'get the model card of the model with the name given with --name from hugging face'
+									},
+									{
+										value: 'fetch',
+										description: 'fetch models specifications from the hugging face REST API. if option name is specified output information about the named model if founded'
 									}
 								],
 								description: 'an action order for the hugfc command'
