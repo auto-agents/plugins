@@ -133,6 +133,10 @@ export default class HugfcCommand extends Command {
 							{ name: "id", alignment: "left", maxlen: 20 },
 							{ name: "dn", alignment: "left" },
 							{ name: "lk", alignment: "left" },
+							{ name: "IF", alignment: "left" },
+							{ name: "TH", alignment: "left" },
+							{ name: "VI", alignment: "left" },
+							{ name: "AU", alignment: "left" },
 							{ name: "tags", alignment: "left", maxLen: 30 },
 						]
 					});
@@ -176,6 +180,36 @@ export default class HugfcCommand extends Command {
 		return t
 	}
 
+	keywordsMap = {
+		['text-to-speech']: 'TTS',	//'👄',
+		['instruction-following']: 'IF',	// '👨‍🏫',
+		['multilingual']: 'ML', // '🌎',
+		['chain-of-thought']: 'COT', //'🧠',
+		['vision']: 'VI', //'👁️',
+		['conversational']: 'C', //'🗣️',
+
+		['endpoints_compatible']: 'EC', //'🖥️',
+
+		['text-generation']: 'TGEN', // '📘',
+		['image-text-to-text']: 'ITTT',
+		['image-to-video']: 'ITV',
+		['text-to-video']: 'TTV',
+		['video-to-video']: 'VTV',
+		['image-text-to-video']: 'ITTV',
+		['audio-to-video']: 'ATV',
+		['text-to-audio']: 'TTA',
+		['video-to-audio']: 'VTA',
+		['audio-to-audio']: 'ATA',
+		['text-to-audio-video']: 'TTAV',
+		['image-to-audio-video']: 'ITAV',
+		['image-text-to-audio-video']: 'ITTAV',
+		['speech-language-model']: 'SLM',
+
+		['transformers']: 'TR',
+		['diffusers']: 'DI',
+		['safetensors']: 'ST'
+	}
+
 	toLittleJson(modelInfo) {
 		var id = modelInfo.id
 		var aut = ''
@@ -185,21 +219,24 @@ export default class HugfcCommand extends Command {
 			id = t[1]
 		}
 
+		const tags = modelInfo.tags
+			.filter(x =>
+				x.length > 2
+				&& !x.includes('region')
+				&& !x.includes('license')
+				&& !x.includes('arxiv')
+				&& !x.includes('dataset')
+				&& !x.includes('base_model')
+				&& !x.includes('deploy')
+			)
+			.map(x => this.keywordsMap[x] ? this.keywordsMap[x] : x)
+
 		return {
 			id: id,
 			dn: modelInfo.downloads,
 			lk: modelInfo.likes,
-			tags: modelInfo.tags
-				.filter(x =>
-					x.length > 2
-					&& !x.includes('region')
-					&& !x.includes('license')
-					&& !x.includes('arxiv')
-					&& !x.includes('dataset')
-					&& !x.includes('base_model')
-					&& !x.includes('deploy')
-				)
-				.join(', ')
+			tags: tags
+				.join(' ')
 		}
 	}
 
