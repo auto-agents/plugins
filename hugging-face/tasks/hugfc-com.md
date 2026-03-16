@@ -17,7 +17,7 @@ The command descriptor is given below:
 ```js
 {
     names: ['hugfc','hu'],
-    description: 'access to settings, configuration, run-time variables',
+    description: 'access to hugging face api',
     config: {
         options: {
             action: {
@@ -33,7 +33,7 @@ The command descriptor is given below:
             name: {
                 type: "string",
                 required: false,
-                short: 'm',
+                short: 'n',
                 description: "the name of the model"
             }
         },

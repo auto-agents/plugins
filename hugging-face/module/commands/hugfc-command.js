@@ -3,6 +3,7 @@ import { spawn } from 'child_process'
 
 import Command from '../../../../shared/src/commands/command.js'
 import { CommandRunErrorEvent, errorEvent } from '../../../../shared/src/data/events.js'
+import { renderMd } from '../../../../shared/src/utils/decorators.js'
 
 export default class HugfcCommand extends Command {
 
@@ -23,7 +24,9 @@ export default class HugfcCommand extends Command {
 			case 'card':
 
 				const argName = 'name'
-				const name = this.getValue(com, args, argName)
+				var name = this.getValue(com, args, argName)
+				if (!name)
+					name = this.getPositionalArg(com, args, argName, 1)
 				if (!this.checkParameter(com, argName, name))
 					return
 
@@ -37,7 +40,7 @@ export default class HugfcCommand extends Command {
 				)
 
 				await new Promise((resolve) => {
-					const py = spawn('python', [scriptPath, modelName], {
+					const py = spawn('python', [scriptPath, name], {
 						windowsHide: true
 					})
 
@@ -70,8 +73,7 @@ export default class HugfcCommand extends Command {
 						}
 
 						try {
-							const { renderMarkdown } = await import('cli-html')
-							const rendered = renderMarkdown(stdout || '')
+							const rendered = renderMd(stdout || '')
 							output.newLine()
 							rendered.split('\n').forEach(line => output.appendLine(line))
 						} catch (err) {

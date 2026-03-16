@@ -16,7 +16,7 @@ export default function config(cli) {
 			commands: [
 				{
 					names: ['hugfc', 'hu'],
-					description: 'access to settings, configuration, run-time variables',
+					description: 'access to hugging face api',
 					config: {
 						options: {
 							action: {
@@ -33,7 +33,7 @@ export default function config(cli) {
 							name: {
 								type: 'string',
 								required: true,
-								short: 'm',
+								short: 'n',
 								description: 'the name of the model'
 							}
 						},
