@@ -14,7 +14,8 @@ export default function config(cli) {
 				config: {
 					urls: {
 						fetchModels: 'https://huggingface.co/api/models'
-					}
+					},
+					maxFetchResults: 50
 				}
 			}
 		},
