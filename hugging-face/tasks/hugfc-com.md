@@ -24,8 +24,13 @@ The command descriptor is given below:
                 type: 'string',
                 required: true,
                 allowedValues: [
-                    { value: 'card'
-                      description: 'get the model card of the model with the name given with --name from hugging face'
+                    { 
+                        value: 'card',
+                        description: 'get the model card of the model with the name given with --name from hugging face'
+                    },
+                    { 
+                        value: 'fetch',
+                        description: 'fetch models specifications from the hugging face REST API. if option name is specified output information about the named model if founded'
                     }
                 ],                
                 description: 'an action order for the hugfc command'
@@ -34,12 +39,12 @@ The command descriptor is given below:
                 type: "string",
                 required: false,
                 short: 'n',
-                description: "the name of the model"
+                description: "the name of the model. required for action 'card'"
             }
         },
         allowPositionals: true
     },
-    file: 'hugfc-command.js'
+    file: 'hugfc-command.js'l
 }
 ```
 
@@ -50,3 +55,4 @@ this command allows to fetch informations about models from the **hugging face R
 - the implementation of the action `fetch` performs the **GET request** at this URL and get a JSON document listing models
 - then the `fetch` construct a `Javascript` object that is stored in the property `this.ctx.modules.huggingFace.models`, the objects have a structure that match the **JSON** properties
 - then the `fetch` command output the number of models founded
+- if option name is specified output informations about the named model if founded

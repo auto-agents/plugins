@@ -38,9 +38,9 @@ export default function config(cli) {
 							},
 							name: {
 								type: 'string',
-								required: true,
+								required: false,
 								short: 'n',
-								description: 'the name of the model'
+								description: "the name of the model. required for action 'card'"
 							}
 						},
 						allowPositionals: true
