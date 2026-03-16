@@ -26,22 +26,5 @@ export default class HuggingFaceModule {
 		this.ctx.components.module.huggingFace = null
 		o.newLine()
 		o.appendLine(margin + '- module unloaded: ' + this.specification.moduleId)
-
-		// include this comment as an implementation example for further devevelopment
-		/*
-		const stopAct = async () => {
-			// TODO ...
-		}
-
-		o.newLine()
-		const stopSrvAction = new ActionController(
-			this.ctx,
-			o,
-			stopAct,
-			new SpinnerService(this.ctx, o)
-				.newSpinner(margin + '- stopping module <module_name>: ' + this.specification.moduleId, cliSpinners.sand)
-		)
-		await stopSrvAction.run()
-		*/
 	}
 }

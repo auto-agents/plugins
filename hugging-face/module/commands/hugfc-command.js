@@ -129,9 +129,10 @@ export default class HugfcCommand extends Command {
 				var found = false
 				if (name && t) {
 					found = t.find(m => m?.id === name)
-					if (found)
+					if (found) {
 						t = [found]
-					cnt = 1
+						cnt = 1
+					}
 				}
 
 				mod.table = {
@@ -189,6 +190,7 @@ export default class HugfcCommand extends Command {
 			p.addRow(r)
 		}
 		output.appendLine(p.render())
+		output.appendLine(this.ctx.components.module.huggingFace.config.legend)
 	}
 
 	toLittleArray(json, max) {
