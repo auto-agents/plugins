@@ -5,7 +5,7 @@ import Command from '../../../../shared/src/commands/command.js'
 import { renderMd } from '../../../../shared/src/utils/decorators.js'
 import { Table } from 'console-table-printer'
 import chalk from 'chalk'
-import { RunCommandEvent } from '../../../../shared/src/data/events.js'
+import { CommandKeyboardCaptureReleaseEvent, KeyboardCaptureRequestEvent, RunCommandEvent } from '../../../../shared/src/data/events.js'
 
 export default class HugfcCommand extends Command {
 
@@ -120,27 +120,21 @@ export default class HugfcCommand extends Command {
 
 				// build and store result
 				mod.models = json
-				const count = Array.isArray(json) ? json.length : (json ? Object.keys(json).length : 0)
-				var cnt = Math.min(mod.config.maxFetchResults, count)
-				const nbPages = Math.ceil(count / cnt) + 1
 				const noPage = 1
-				var t = this.toLittleArray(json, cnt)
 
-				var found = false
-				if (name && t) {
-					found = t.find(m => m?.id === name)
-					if (found) {
-						t = [found]
-						cnt = 1
+				const options = {
+					sort: {
+						field: 'id', dir: 'up'
 					}
 				}
+				this.setPage(noPage, options)
 
-				mod.table = {
-					table: t,
-					noPage: noPage,
-					count: count,
-					cnt: cnt,
-					nbPages: nbPages
+				if (name) {
+					const found = mod.table.table.find(m => m?.id === name)
+					if (found) {
+						mod.table.table = [found]
+						mod.table.cnt = 1
+					}
 				}
 
 				// display result
@@ -152,27 +146,47 @@ export default class HugfcCommand extends Command {
 		}
 	}
 
+	setPage(noPage, options) {
+		const mod = this.ctx.components.module.huggingFace
+		const json = mod.models
+		const count = Array.isArray(json) ? json.length : (json ? Object.keys(json).length : 0)
+		var cnt = Math.min(mod.config.pageSize, count)
+		const nbPages = Math.ceil(count / cnt) + 1
+		var t = this.toLittleArray(json, (noPage - 1) * mod.config.pageSize, cnt)
+		mod.table = {
+			table: t,
+			noPage: noPage,
+			count: count,
+			cnt: cnt,
+			nbPages: nbPages,
+			options: options
+		}
+	}
+
 	displayTable() {
+		const mod = this.ctx.components.module.huggingFace
 		const {
 			table,
 			noPage,
 			count,
 			cnt,
 			nbPages
-		} = this.ctx.components.module.huggingFace.table
+		} = mod.table
 		const output = this.ctx.components.output
+		const e = this.ctx.components.event
 
 		if (table.length > 1) {
-			//this.ctx.components.event.emit(RunCommandEvent, 'c')
+			e.emit(KeyboardCaptureRequestEvent, this)
 			output.clear()
-			output.appendLine(`models founded: ${count} | page ${noPage}/${nbPages}`)
+			output.appendLine(`models founded: ${count} | page ${noPage}/${nbPages} ${mod.config.kbdHelp}`)
 		}
 		else
 			output.newLine()
 
 		const p = new Table({
 			columns: [
-				{ name: "id", alignment: "left", maxlen: 20 },
+				{ name: 'idx', alignment: 'left' },
+				{ name: "id", alignment: "left", maxlen: mod.config.layout.idMaxLen },
 				{ name: "B", alignment: "left" },
 				{ name: "dn", alignment: "left" },
 				{ name: "lk", alignment: "left", maxLen: 1 },
@@ -181,7 +195,7 @@ export default class HugfcCommand extends Command {
 				{ name: "VI", alignment: "left", maxLen: 1 },
 				{ name: "AU", alignment: "left", maxLen: 1 },
 				{ name: "CD", alignment: "left", maxLen: 1 },
-				{ name: "tags", alignment: "left", maxLen: 30 },
+				{ name: "tags", alignment: "left", maxLen: mod.config.layout.tagsMaxLen },
 			]
 		});
 
@@ -190,13 +204,45 @@ export default class HugfcCommand extends Command {
 			p.addRow(r)
 		}
 		output.appendLine(p.render())
-		output.appendLine(this.ctx.components.module.huggingFace.config.legend)
+		output.appendLine(mod.config.legend)
 	}
 
-	toLittleArray(json, max) {
+	onKeyboardEvent(k) {
+		const mod = this.ctx.components.module.huggingFace
+		const table = mod.table
+		const e = this.ctx.components.event
+		const o = this.ctx.components.output
+
+		if (k == mod.config.keys.close) {
+			e.emit(CommandKeyboardCaptureReleaseEvent, this)
+			o.newLine()
+			o.appendLine('table closed')
+			return
+		}
+
+		if (k.rightArrow) {
+			table.noPage++
+			if (table.noPage > table.nbPages)
+				table.noPage = 1
+			this.setPage(table.noPage)
+			this.displayTable()
+		}
+
+		if (k.leftArrow) {
+			table.noPage--
+			if (table.noPage < 1)
+				table.noPage = table.nbPages
+			this.setPage(table.noPage)
+			this.displayTable()
+		}
+	}
+
+	toLittleArray(json, start, count) {
 		const t = []
-		for (var i = 0; i < max; i++) {
-			t.push(this.toLittleJson(json[i]))
+		for (var i = 0; i < count; i++) {
+			const j = i + start
+			if (j < json.length)
+				t.push(this.toLittleJson(j, json[j]))
 		}
 		return t
 	}
@@ -210,12 +256,17 @@ export default class HugfcCommand extends Command {
 		['multimodal']: 'MM',
 		['reasoning']: 'R',
 		['tool-calling']: 'TOOL',
+		['instruct']: 'INSTR',
 		['code']: 'COD',
 		['custom_code']: 'COD',
 		['deep-research']: 'DR',
 		['eval-results']: 'ER',
 		['large-language-model']: 'LLM',
 		['feature-extraction']: 'FE',
+		['storytelling']: 'STORY',
+		['story']: 'STORY',
+		['text-embeddings-inference']: 'EMB',
+		['problem-solving']: 'PROB',
 
 		['endpoints_compatible']: 'EC', //'🖥️',
 
@@ -229,6 +280,7 @@ export default class HugfcCommand extends Command {
 		['image-to-image']: 'ITI',
 		['image-editing']: 'IE',
 		['text-to-video']: 'TTV',
+		['text-to-image']: 'TTI',
 		['video-to-video']: 'VTV',
 		['image-text-to-video']: 'ITTV',
 		['audio-to-video']: 'ATV',
@@ -240,6 +292,16 @@ export default class HugfcCommand extends Command {
 		['image-to-audio-video']: 'ITAV',
 		['image-text-to-audio-video']: 'ITTAV',
 		['speech-language-model']: 'SLM',
+		['audio']: 'AU',
+		['pyannote-audio-pipeline']: 'AU',
+		['pyannote-audio']: 'AU',
+		['pyannote']: 'AU',
+		['voice']: 'VOI',
+		['speech']: 'VOI',
+		['speaker-diarization']: 'SPKR',
+		['speaker-change-detection']: 'CSPKR',
+		['voice-activity-detection']: 'ASPKR',
+		['overlapped-speech-detection']: 'OSPKR',
 
 		['Dense']: '¤DS',
 		['transformers']: '¤TR',
@@ -249,6 +311,19 @@ export default class HugfcCommand extends Command {
 		['pytorch']: '¤PYT',
 		['diffusion-single-file']: '¤DISF',
 		['compressed-tensors']: '¤CT',
+		['sentence-transformers']: 'STR',
+		['sentence-similarity']: 'STSI',
+		['science-reasoning']: 'SCIE',
+		['science']: 'SCIE',
+		['cardiovascular']: 'MEDIC',
+		['medical']: 'MEDIC',
+		['medicine']: 'MEDIC',
+		['medical-understanding']: 'MEDIC',
+		['medical-reasoning']: 'MEDIC',
+		['medical-diagnosis']: 'MEDIC',
+		['medical-diagnosis']: 'MEDIC',
+		['medical-management']: 'MEDIC',
+		['internal-medecine']: 'MEDIC',
 
 		['uncensored']: 'U',
 		['abliterated']: 'A',
@@ -265,10 +340,10 @@ export default class HugfcCommand extends Command {
 	kwGroups = {
 
 		'TL': [
-			'IF', 'TOOL', 'ER'
+			'IF', 'TOOL', 'ER', 'INSTR'
 		],
 		'TH': [
-			'COT', 'R', 'DR'
+			'COT', 'R', 'DR', 'PROB', 'INSTR'
 		],
 		'VI': [
 			'VI', 'MM', 'IG', 'ITTT', 'ITV', 'ITI', 'IE',
@@ -277,7 +352,8 @@ export default class HugfcCommand extends Command {
 		],
 		'AU': [
 			'MM', 'TTS', 'STT', 'TTA', 'VTA', 'ATA', 'TTAV',
-			'ITAV', 'ITTAV', 'SLM'
+			'ITAV', 'ITTAV', 'SLM', 'AU', 'VOI', 'SPKR',
+			'CSPKR', 'ASPKR', 'OSPKR'
 		],
 		'CD': [
 			'COD'
@@ -287,6 +363,36 @@ export default class HugfcCommand extends Command {
 		]
 	}
 
+	ignoreTags = [
+		'region',
+		'license',
+		'arxiv',
+		'dataset',
+		'base_model',
+		'deploy',
+		'context',
+		'creative',
+		'writing',
+		'fiction',
+		'generation',
+		'scene',
+		'continue',
+		'all',
+		'genres',
+		'romance',
+		'prosing',
+		'vivid',
+		'roleplaying',
+		'swearing',
+		'horror',
+		'mergekit',
+		'plot',
+		'sub-plot',
+		'mixture',
+		'of',
+		'experts'
+	]
+
 	getKwGroups(kw) {
 		const r = []
 		for (const [grp, list] of Object.entries(this.kwGroups)) {
@@ -295,7 +401,8 @@ export default class HugfcCommand extends Command {
 		return r
 	}
 
-	toLittleJson(modelInfo) {
+	toLittleJson(idx, modelInfo) {
+		const mod = this.ctx.components.module.huggingFace
 		var id = modelInfo.id
 		var aut = ''
 		const t = id.split('/')
@@ -304,15 +411,16 @@ export default class HugfcCommand extends Command {
 			id = t[1]
 		}
 
+		const tagNotPartOfIgnoredOne = x => {
+			var r = true
+			this.ignoreTags.forEach(t => r &= !x.includes(t))
+			return r
+		}
+
 		const tags = modelInfo.tags
 			.filter(x =>
-				x.length > 2
-				&& !x.includes('region')
-				&& !x.includes('license')
-				&& !x.includes('arxiv')
-				&& !x.includes('dataset')
-				&& !x.includes('base_model')
-				&& !x.includes('deploy')
+				x.length >= mod.config.minTagSize
+				&& tagNotPartOfIgnoredOne(x)
 			)
 			.map(x => this.keywordsMap[x] ? this.keywordsMap[x] : x)
 
@@ -331,9 +439,12 @@ export default class HugfcCommand extends Command {
 			_cd |= grps.includes('CD')
 		})
 
-		const cm = chalk.hex('#00FF00')('x')
-
+		const cm = mod.config.theme.checkmark
+		const idMaxLen = mod.config.layout.idMaxLen
+		if (id.length > idMaxLen)
+			id = id.substr(0, idMaxLen) + '...'
 		return {
+			idx: idx,
 			id: id,
 			B: null,
 			dn: modelInfo.downloads,

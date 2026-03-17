@@ -1,4 +1,6 @@
-export default function config(cli) {
+import chalk from 'chalk'
+
+export default function config() {
 	return {
 		modules: {
 			huggingFace: {
@@ -15,8 +17,20 @@ export default function config(cli) {
 					urls: {
 						fetchModels: 'https://huggingface.co/api/models'
 					},
-					maxFetchResults: 15,
-					legend: 'TL: Tool | TH: Think | VI: Vision | AU: Audio | CD: Code'
+					pageSize: 10,
+					minTagSize: 4,
+					kbdHelp: `| ${chalk.inverse('C')}: close | ${chalk.inverse('Left')}: previous page | ${chalk.inverse('Right')}: next page`,
+					legend: 'TL: Tool | TH: Think | VI: Vision | AU: Audio | CD: Code',
+					keys: {
+						close: 'c'
+					},
+					theme: {
+						checkmark: chalk.hex('#00FF00')('x')
+					},
+					layout: {
+						idMaxLen: 50,
+						tagsMaxLen: 30
+					}
 				}
 			}
 		},
