@@ -119,23 +119,33 @@ export default class HugfcCommand extends Command {
 				}
 
 				// build and store result
-				mod.models = json
-				const noPage = 1
+
+				const argSort = 'sort'
+				const optSort = this.getValue(com, args, argSort)
+				if (!this.checkParameter(com, argSort, optSort)) return
+
+				const argDir = 'dir'
+				const optDir = this.getValue(com, args, argDir)
+				if (!this.checkParameter(com, argDir, optDir)) return
 
 				const options = {
 					sort: {
-						field: 'id', dir: 'up'
+						field: optSort,
+						dir: optDir
 					}
 				}
-				this.setPage(noPage, options)
+
+				this.setTable(json, options)
 
 				if (name) {
-					const found = mod.table.table.find(m => m?.id === name)
+					const found = mod.models.find(m => m?.id === name)
 					if (found) {
-						mod.table.table = [found]
-						mod.table.cnt = 1
+						mod.models = [found]
 					}
 				}
+
+				const noPage = 1
+				this.setPage(noPage, options)
 
 				// display result
 				this.displayTable()
@@ -146,15 +156,75 @@ export default class HugfcCommand extends Command {
 		}
 	}
 
-	setPage(noPage, options) {
+	setTable(json, options) {
 		const mod = this.ctx.components.module.huggingFace
-		const json = mod.models
-		const count = Array.isArray(json) ? json.length : (json ? Object.keys(json).length : 0)
+		mod.json = json
+		const count = json.length
 		var cnt = Math.min(mod.config.pageSize, count)
 		const nbPages = Math.ceil(count / cnt) + 1
-		var t = this.toLittleArray(json, (noPage - 1) * mod.config.pageSize, cnt)
+
+		const t = this.toLittleArray(json, 0, count)
+
+		// sort
+
+		const inv = (options.sort.dir == 'desc') ? -1 : 1
+		switch (options.sort?.field) {
+
+			case 'id':
+				t.sort((a, b) => {
+					const nameA = a.id.toLowerCase();
+					const nameB = b.id.toLowerCase();
+					if (nameA < nameB) {
+						return -1 * inv;
+					}
+					if (nameA > nameB) {
+						return 1 * inv;
+					}
+					return 0;
+				})
+				break
+
+			case 'B':
+				t.sort((a, b) => (a.B - b.B) * inv)
+				break
+			case 'dn':
+				t.sort((a, b) => (a.dn - b.dn) * inv)
+				break
+			case 'lk':
+				t.sort((a, b) => (a.lk - b.lk) * inv)
+				break
+			case 'TL':
+				t.sort((a, b) => ((a.TL ? 1 : 0) - (b.TL ? 1 : 0)) * inv)
+				break
+			case 'TH':
+				t.sort((a, b) => ((a.TH ? 1 : 0) - (b.TH ? 1 : 0)) * inv)
+				break
+			case 'VI':
+				t.sort((a, b) => ((a.VI ? 1 : 0) - (b.VI ? 1 : 0)) * inv)
+				break
+			case 'AU':
+				t.sort((a, b) => ((a.AU ? 1 : 0) - (b.AU ? 1 : 0)) * inv)
+				break
+			case 'CD':
+				t.sort((a, b) => ((a.CD ? 1 : 0) - (b.CD ? 1 : 0)) * inv)
+				break
+
+		}
+		mod.models = t
+	}
+
+	setPage(noPage, options) {
+		const mod = this.ctx.components.module.huggingFace
+		const t = mod.models
+		const count = t.length
+		var cnt = Math.min(mod.config.pageSize, count)
+		const nbPages = Math.floor(count / cnt)
+
+		const i = (noPage - 1) * mod.config.pageSize
+		const j = (noPage - 1) * mod.config.pageSize + cnt //- 1
+
 		mod.table = {
-			table: t,
+			table: t.slice(i, j),
 			noPage: noPage,
 			count: count,
 			cnt: cnt,
@@ -224,7 +294,7 @@ export default class HugfcCommand extends Command {
 			table.noPage++
 			if (table.noPage > table.nbPages)
 				table.noPage = 1
-			this.setPage(table.noPage)
+			this.setPage(table.noPage, table.options)
 			this.displayTable()
 		}
 
@@ -232,7 +302,7 @@ export default class HugfcCommand extends Command {
 			table.noPage--
 			if (table.noPage < 1)
 				table.noPage = table.nbPages
-			this.setPage(table.noPage)
+			this.setPage(table.noPage, table.options)
 			this.displayTable()
 		}
 	}
@@ -401,15 +471,20 @@ export default class HugfcCommand extends Command {
 		return r
 	}
 
-	toLittleJson(idx, modelInfo) {
-		const mod = this.ctx.components.module.huggingFace
-		var id = modelInfo.id
+	transformId(id) {
 		var aut = ''
 		const t = id.split('/')
 		if (t.length > 1) {
 			aut = t[0]
 			id = t[1]
 		}
+		return id
+	}
+
+	toLittleJson(idx, modelInfo) {
+		const mod = this.ctx.components.module.huggingFace
+		var id = modelInfo.id
+		id = this.transformId(id)
 
 		const tagNotPartOfIgnoredOne = x => {
 			var r = true
@@ -440,6 +515,7 @@ export default class HugfcCommand extends Command {
 		})
 
 		const cm = mod.config.theme.checkmark
+		const nv = null
 		const idMaxLen = mod.config.layout.idMaxLen
 		if (id.length > idMaxLen)
 			id = id.substr(0, idMaxLen) + '...'
@@ -449,11 +525,11 @@ export default class HugfcCommand extends Command {
 			B: null,
 			dn: modelInfo.downloads,
 			lk: modelInfo.likes,
-			TL: _tl ? cm : ' ',
-			TH: _th ? cm : ' ',
-			VI: _vi ? cm : ' ',
-			AU: _au ? cm : ' ',
-			CD: _cd ? cm : ' ',
+			TL: _tl ? cm : nv,
+			TH: _th ? cm : nv,
+			VI: _vi ? cm : nv,
+			AU: _au ? cm : nv,
+			CD: _cd ? cm : nv,
 			tags: tags
 				.join(' ')
 		}

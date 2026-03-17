@@ -61,6 +61,73 @@ export default function config() {
 								required: false,
 								short: 'n',
 								description: "the name of the model. required for action 'card'"
+							},
+							sort: {
+								type: 'string',
+								required: false,
+								default: 'id',
+								allowedValues: [
+									{
+										value: 'id',
+										description: 'model id'
+									},
+									{
+										value: 'B',
+										description: 'milliards of parameters'
+									},
+									{
+										value: 'dn',
+										description: 'downloads'
+									},
+									{
+										value: 'dn',
+										description: 'downloads'
+									},
+									{
+										value: 'lk',
+										description: 'likes'
+									},
+									{
+										value: 'TL',
+										description: 'model enable tools'
+									},
+									{
+										value: 'TH',
+										description: 'model enable think'
+									},
+									{
+										value: 'VI',
+										description: 'model enable vision or image/video'
+									},
+									{
+										value: 'AU',
+										description: 'model enable audio,speech,recognition,...'
+									},
+									{
+										value: 'CD',
+										description: 'model enable coding'
+									}
+								],
+								short: 's',
+								description: "the name of the field on which the table must be sorted. use with 'fetch'"
+							},
+							dir: {
+								type: 'string',
+								allowedValues: [
+									{
+										value: 'asc',
+										description: 'ascendant sort'
+									},
+									{
+										value: 'desc',
+										description: 'descendant sort'
+									}
+								],
+								default: 'asc',
+								required: false,
+								short: 'd',
+								description: "the direction of the sort. use with 'fetch'"
+
 							}
 						},
 						allowPositionals: true
