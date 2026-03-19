@@ -1,11 +1,11 @@
 import path from 'path'
 import { spawn } from 'child_process'
 
-import Command from '../../../../shared/src/commands/command.js'
-import { renderMd } from '../../../../shared/src/utils/decorators.js'
+import Command from '../../../../../../shared/src/commands/command.js'
+import { renderMd } from '../../../../../../shared/src/utils/decorators.js'
 import { Table } from 'console-table-printer'
 import chalk from 'chalk'
-import { CommandKeyboardCaptureReleaseEvent, KeyboardCaptureRequestEvent, RunCommandEvent } from '../../../../shared/src/data/events.js'
+import { CommandKeyboardCaptureReleaseEvent, KeyboardCaptureRequestEvent, RunCommandEvent } from '../../../../../../shared/src/data/events.js'
 import wildcard from 'wildcard'
 
 export default class HugfcCommand extends Command {
