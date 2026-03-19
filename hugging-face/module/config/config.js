@@ -15,17 +15,23 @@ export default function config() {
 
 				config: {
 					urls: {
-						fetchModels: 'https://huggingface.co/api/models'
+						fetchModels: 'https://huggingface.co/api/models',
+						cardBaseUrl: 'https://huggingface.co/'
 					},
 					pageSize: 10,
 					minTagSize: 4,
 					kbdHelp: `| ${chalk.inverse('C')}: close | ${chalk.inverse('Left')}: previous page | ${chalk.inverse('Right')}: next page`,
-					legend: 'TL: Tool | TH: Think | VI: Vision | AU: Audio | CD: Code',
+					legend: chalk.italic('TL: Tool | TH: Think | VI: Vision | AU: Audio | CD: Code'),
 					keys: {
 						close: 'c'
 					},
 					theme: {
-						checkmark: chalk.hex('#00FF00')('x')
+						checkmark: chalk.hex('#00FF00')('x '),
+						selectedItem: {
+							foreground: '#FFCC00'
+						},
+						hgCol: '#00DDDD',
+						cmtCol: '#00DDAA'
 					},
 					layout: {
 						idMaxLen: 50,
@@ -129,6 +135,10 @@ export default function config() {
 								required: false,
 								default: '',
 								allowedValues: [
+									{
+										value: '',
+										description: 'no filter'
+									},
 									{
 										value: 'id',
 										description: 'model id'

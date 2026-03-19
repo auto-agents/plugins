@@ -130,7 +130,7 @@ export default class HugfcCommand extends Command {
 				if (!this.checkParameter(com, argDir, optDir)) return
 
 				const argFilter = 'filter'
-				const optFilter = this.getValue(com, args, argFilter)
+				const optFilter = this.getValue(com, args, argFilter) || ''
 				if (!this.checkParameter(com, argFilter, optFilter)) return
 				const hasFilter = optFilter.length > 0
 
@@ -255,7 +255,8 @@ export default class HugfcCommand extends Command {
 			count: count,
 			cnt: cnt,
 			nbPages: nbPages,
-			options: options
+			options: options,
+			selectedIndex: 0
 		}
 	}
 
@@ -266,18 +267,20 @@ export default class HugfcCommand extends Command {
 			noPage,
 			count,
 			cnt,
-			nbPages
+			nbPages,
+			options,
+			selectedIndex
 		} = mod.table
-		const output = this.ctx.components.output
+		const o = this.ctx.components.output
 		const e = this.ctx.components.event
 
 		if (table.length > 1) {
 			e.emit(KeyboardCaptureRequestEvent, this)
-			output.clear()
-			output.appendLine(`models founded: ${count} | page ${noPage}/${nbPages} ${mod.config.kbdHelp}`)
+			o.clear()
+			o.appendLine(`models founded: ${count} | page ${noPage}/${nbPages} ${mod.config.kbdHelp}`)
 		}
 		else
-			output.newLine()
+			o.newLine()
 
 		const p = new Table({
 			columns: [
@@ -295,12 +298,42 @@ export default class HugfcCommand extends Command {
 			]
 		});
 
+		var selectedRow = null
+		var selectedModelFullId = null
+
 		for (var i = 0; i < cnt; i++) {
-			const r = table[i]
+			var r = table[i]
+			if (i == selectedIndex) {
+				const r2 = {}
+				for (var [f, v] of Object.entries(r)) {
+					if (f != 'originalId') {
+						const tx = String(v === null ? ' ' : v)
+						const ta = tx.split(' ')
+						v = ta.map(x => chalk.hex(mod.config.theme.selectedItem.foreground)(x))
+							.join(' ')
+						r2[f] = v
+					}
+				}
+				selectedModelFullId = r.originalId
+				selectedRow = r
+				r = r2
+			} else r = { ...r }
+			delete r.originalId
 			p.addRow(r)
 		}
-		output.appendLine(p.render())
-		output.appendLine(mod.config.legend)
+
+		const cardUrl = mod.config.urls.cardBaseUrl + selectedModelFullId
+
+		o.appendLine(p.render())
+		o.newLine()
+		o.appendLine(
+			chalk.hex(mod.config.theme.hgCol)('model: ')
+			+ chalk.hex(mod.config.theme.selectedItem.foreground)(selectedModelFullId))
+		o.appendLine(
+			(chalk.hex(mod.config.theme.hgCol)('card url: '))
+			+ cardUrl)
+		o.newLine()
+		o.appendLine(chalk.hex(mod.config.theme.cmtCol)(mod.config.legend))
 	}
 
 	onKeyboardEvent(k) {
@@ -331,6 +364,22 @@ export default class HugfcCommand extends Command {
 			this.setPage(table.noPage, table.options)
 			this.displayTable()
 		}
+
+		if (k.downArrow) {
+			mod.table.selectedIndex = Math.min(
+				mod.table.cnt - 1,
+				mod.table.selectedIndex + 1
+			)
+			this.displayTable()
+		}
+
+		if (k.upArrow) {
+			mod.table.selectedIndex = Math.max(
+				0,
+				mod.table.selectedIndex - 1
+			)
+			this.displayTable()
+		}
 	}
 
 	toLittleArray(json, start, count) {
@@ -354,6 +403,8 @@ export default class HugfcCommand extends Command {
 		['tool-calling']: 'TOOL',
 		['instruct']: 'INSTR',
 		['code']: 'COD',
+		['coder']: 'COD',
+		['coding']: 'COD',
 		['custom_code']: 'COD',
 		['deep-research']: 'DR',
 		['eval-results']: 'ER',
@@ -511,6 +562,7 @@ export default class HugfcCommand extends Command {
 
 	toLittleJson(idx, modelInfo) {
 		const mod = this.ctx.components.module.huggingFace
+		const originalId = modelInfo.id
 		var id = modelInfo.id
 		id = this.transformId(id)
 
@@ -570,7 +622,8 @@ export default class HugfcCommand extends Command {
 			AU: _au ? cm : nv,
 			CD: _cd ? cm : nv,
 			tags: tags
-				.join(' ')
+				.join(' '),
+			originalId: originalId
 		}
 	}
 }
