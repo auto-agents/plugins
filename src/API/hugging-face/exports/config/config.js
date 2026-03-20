@@ -7,6 +7,7 @@ export default function config() {
 				moduleId: 'huggingFace',
 				description: 'hugging face hub access module',
 				file: 'hugging-face-module.js',
+				category: 'API',
 
 				autoLoad: true,
 				enabled: true,
