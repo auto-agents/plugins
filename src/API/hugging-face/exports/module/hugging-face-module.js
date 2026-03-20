@@ -24,7 +24,5 @@ export default class HuggingFaceModule {
 		const margin = ' '.repeat(oc.margin + oc.marginBase)
 
 		this.ctx.components.module.huggingFace = null
-		o.newLine()
-		o.appendLine(margin + '- module unloaded: ' + this.specification.moduleId)
 	}
 }
