@@ -48,10 +48,10 @@ export default function config() {
 										}
 									},
 									return: {
-										'[0]': 'The output value that appears in the "Generated Audio" Audio component.',
+										/*'[0]': 'The output value that appears in the "Generated Audio" Audio component.',
 										'[1]': 'The output value that appears in the "value_492" Textbox component.',
 										'[2]': 'The output value that appears in the "value_500" Json component.',
-										'[3]': 'The output value that appears in the "value_501" Textbox component.',
+										'[3]': 'The output value that appears in the "value_501" Textbox component.',*/
 									}
 								}
 							}
