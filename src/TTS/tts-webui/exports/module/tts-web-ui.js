@@ -70,12 +70,13 @@ export default class TTSWebUI {
 
 			const bridge = require(apiBridgePath)
 			try {
-				this.apiBridge = new bridge.default({
+				apiBridge = new bridge.default({
 					ctx: this.ctx,
 					config: this.config,
 					apiConfig: apiConfig,
 					baseUrl: this.config.baseUrl.replace('{port}', this.config.port)
 				})
+				this.config.agent.apiBridge = apiBridge
 				o.appendLine(margin2 + `  api bridge loaded ✔`)
 			}
 			catch (err) {
@@ -115,7 +116,7 @@ export default class TTSWebUI {
 	/* <---- ---- */
 
 	#assertSpeakModuleImplAvailable() {
-		if (!this.agent.bridge) throw new SpeakerError('TTS module implementation not available (null)')
+		if (!this.config.agent.apiBridge) throw new SpeakerError('TTS module bridge implementation not available (null)')
 	}
 
 	#getOutput(outputContext) {
