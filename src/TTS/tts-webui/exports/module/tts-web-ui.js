@@ -70,13 +70,13 @@ export default class TTSWebUI {
 
 			const bridge = require(apiBridgePath)
 			try {
-				apiBridge = new bridge.default({
+				this.apiBridge = new bridge.default({
 					ctx: this.ctx,
 					config: this.config,
 					apiConfig: apiConfig,
 					baseUrl: this.config.baseUrl.replace('{port}', this.config.port)
 				})
-				this.config.agent.apiBridge = apiBridge
+				this.config.agent.apiBridge = this.apiBridge
 				o.appendLine(margin2 + `  api bridge loaded ✔`)
 			}
 			catch (err) {
@@ -100,6 +100,7 @@ export default class TTSWebUI {
 
 	async speak(text, voice = null) {
 		this.#assertSpeakModuleImplAvailable()
+		return await this.apiBridge.speek(text, voice)
 	}
 
 	async waitIdle(timeout) {
