@@ -68,7 +68,7 @@ export default class TTSWebUI {
 			if (!existsSync(apiBridgePath))
 				throw new Error('bridge file not found')
 
-			const bridge = require(apiBridgeFilename)
+			const bridge = require(apiBridgePath)
 			try {
 				this.apiBridge = new bridge.default({
 					ctx: this.ctx,
