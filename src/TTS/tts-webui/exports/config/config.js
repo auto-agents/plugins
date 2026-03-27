@@ -181,6 +181,43 @@ export default function config(ctx) {
 								}
 							}
 						},
+
+						OpenVoiceV2: {
+							bridgeFile: 'open-voice-v2.js',
+							description: 'OpenVoice can accurately clone the reference tone color and generate speech in multiple languages and accents.  OpenVoice enables granular control over voice styles, such as emotion and accent, as well as other style parameters including rhythm, pauses, and intonation. Neither of the language of the generated speech nor the language of the reference speech needs to be presented in the massive-speaker multi-lingual training dataset.',
+							paths: {
+								speak: {
+									uri: '/openvoice_v2',
+									parameters: {
+										text: {
+											description: 'The input value that is provided in the "Text to generate" Textbox component.'
+										},
+										speaker_accent: {
+											default: 'default',
+											possibleValues: [
+												'default', 'whispering', 'cheerful', 'terrified', 'angry', 'sad', 'friendly'
+											],
+											description: 'The input value that is provided in the "Style" Dropdown component'
+										},
+										language_code: {
+											default: 'fr',
+											possibleValues: ['en', 'fr'],
+											description: 'language code'
+										},
+										seed: {
+											default: 2044339735,
+											description: 'The input value that is provided in the "parameter_482" Textbox component.'
+										},
+										reference_audio: {
+											default: 'alice.wav',
+											description: 'The input value that is provided in the "Reference Audio" Audio component. The FileData class is a subclass of the GradioModel class that represents a file object within a Gradio interface. It is used to store file data and metadata when a file is uploaded. Attributes: path: The server file path where the file is stored. url: The normalized server URL pointing to the file. size: The size of the file in bytes. orig_name: The original filename before upload. mime_type: The MIME type of the file. is_stream: Indicates whether the file is a stream. meta: Additional metadata used internally (should not be changed)'
+										}
+									},
+									return: {
+									}
+								}
+							}
+						},
 					}
 				}
 			}

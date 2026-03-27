@@ -1,6 +1,6 @@
 import BridgeTTSBase from "./bridge-tts-base";
 
-export default class OpenVoiceV1Bridge extends BridgeTTSBase {
+export default class OpenVoiceV2Bridge extends BridgeTTSBase {
 
     /**
      * new instance
@@ -28,10 +28,12 @@ export default class OpenVoiceV1Bridge extends BridgeTTSBase {
 
         return {
             text: tx,
-            style:
-                agentPars.style
-                || pars.style.default,
+            speaker_accent:
+                agentPars.speaker_accent
+                || pars.speaker_accent.default,
             reference_audio: this.referenceAudioData,
+            language_code: agentPars.language_code
+                || pars.language_code.default,
             seed:
                 agentPars.seed
                 || pars.seed.default

@@ -33,7 +33,8 @@
     - **Kokoro TTS**
     - **Kitten TTS**
     - **OpenVoice V1**
-
+    - **OpenVoice V2**
+    
 #### STT
 
 - voice recognition : *Speak To Text* with any browser implementing `WebSpeechAPI` *(coming soon)*
