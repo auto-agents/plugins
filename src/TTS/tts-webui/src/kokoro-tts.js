@@ -39,7 +39,8 @@ export default class KokoroTTSBridge {
 
         try {
             const t = splitSentence(this.ctx, text)
-            console.log(t)
+            if (this.ctx.dialoger.sentenceSpliter.dumpSplitsArray)
+                console.log(t)
 
             for (var i = 0; i < t.length; i++) {
 
