@@ -8,7 +8,7 @@
 
 ---
 
-**This repository contains the auto agents speech module**
+**This repository contains the auto-agents cli modules**
 </td>
 <td>
 <img src="assets/agent-5.jfif" alt="Auto Agents" width="800px">
@@ -18,18 +18,38 @@
 
 ---
 
-built within:
+## built within:
 - specifications in file [`specifications/speech-module-model.md`](specifications/speech-module-model.md)
 - guidelines in file [`doc/implementation.md` ](doc/implementation.md)
 - tasks in file [`tasks/dev-speech-module.md`](tasks/dev-speech-module.md)
 
-check documentation:
+## check documentation:
 
 - [user documentation](doc/user-doc.md)
 - [commands usage](doc/commands-usage.md)
 - [speech module usage](doc/speech-module-usage.md)
 
+## available modules:
+
+#### TTS
+
+- [tts-browser](https://github.com/auto-agents/modules/blob/main/speech) : **Text To Speech** with any browser implementing `WebSpeechAPI`
+- [tts-webui](https://github.com/auto-agents/modules/blob/main/src/TTS/tts-webui) : supports **Text To Speech** from softwares that can be installed in **`TTS WebUI`** [https://github.com/rsxdalv/TTS-WebUI](https://github.com/rsxdalv/TTS-WebUI), throught the **Gradio** API. Currently the following TTS providers are available in *auto-agents* :
+    - **kokoro-tts**
+
+#### STT
+
+- voice recognition : *Speak To Text* with any browser implementing `WebSpeechAPI` *(coming soon)*
+
+#### API
+
+- [Hugging Face](https://github.com/auto-agents/modules/blob/main/hugging-face) : access to **hugging face API**, get model cards and allow to search the huge hugging face dabatabse for detailed informations about **models**
+
+<br>
+
 ---
+
+<br>
 
 *this software is copyrighted by Franck Gaspoz, since January 2026, under the **GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007** (see file [LICENCE](LICENSE))*
 
