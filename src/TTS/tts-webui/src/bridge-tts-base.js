@@ -3,12 +3,16 @@ import { saveToTemp, toJson } from "../../../../../shared/src/utils/utils";
 import SpeakerError from "../../../../../shared/src/data/speaker-error";
 import { splitSentence } from "../../../../../shared/src/utils/text";
 import { FifoStack, task } from "../../../../../shared/src/utils/fifo-stack";
+import path from 'path'
+import { existsSync, readFileSync } from 'fs'
 
 export default class BridgeTTSBase {
 
     stackRunning = false
     name = null
     speakStackRunDelay = 100
+    referenceAudioPath = null
+    referenceAudioData = null
 
     /**
          * new instance
@@ -87,5 +91,38 @@ export default class BridgeTTSBase {
         } catch (err) {
             throw SpeakerError.fromErr('speak fail', err)
         }
+    }
+
+    findReferenceAudioFile(referenceAudio) {
+        // scan configured paths to find audio file
+        const basePath = this.config.paths.basePath
+        var res = null
+        this.config.paths.voices.forEach(p => {
+            if (!res) {
+                if (!path.isAbsolute(p))
+                    p = path.join(basePath, p)
+                const fp = path.join(p, referenceAudio)
+                // scan the path for file
+                res = existsSync(fp) ? fp : null
+            }
+        })
+        return res
+    }
+
+    loadReferenceAudioData(referenceAudio) {
+        if (this.referenceAudioPath == referenceAudio
+            && this.referenceAudioData
+        ) return
+
+        this.referenceAudioPath = referenceAudio
+        this.referenceAudioData = null
+
+        if (!path.isAbsolute(referenceAudio))
+            referenceAudio = this.findReferenceAudioFile(referenceAudio)
+        if (!referenceAudio) throw SpeakerError.fromMessage('reference audio file not found: ' + referenceAudio)
+        const d = readFileSync(referenceAudio)
+        const b = new Blob(d)
+
+        this.referenceAudioData = b
     }
 }

@@ -162,11 +162,6 @@ export default function config() {
 										reference_audio: {
 											default: 'alice.wav',
 											description: 'The input value that is provided in the "Reference Audio" Audio component. The FileData class is a subclass of the GradioModel class that represents a file object within a Gradio interface. It is used to store file data and metadata when a file is uploaded. Attributes: path: The server file path where the file is stored. url: The normalized server URL pointing to the file. size: The size of the file in bytes. orig_name: The original filename before upload. mime_type: The MIME type of the file. is_stream: Indicates whether the file is a stream. meta: Additional metadata used internally (should not be changed)'
-										},
-										api_name: {
-											default: '/openvoice_v1',
-											possibleValues: ['/openvoice_v1'],
-											description: 'open voice api ver'
 										}
 									},
 									return: {

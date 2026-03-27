@@ -2,8 +2,7 @@ import BridgeTTSBase from "./bridge-tts-base";
 
 export default class OpenVoiceV1Bridge extends BridgeTTSBase {
 
-    referenceAudioPath = null
-    referenceAudio = null
+
 
     /**
      * new instance
@@ -23,20 +22,21 @@ export default class OpenVoiceV1Bridge extends BridgeTTSBase {
     }
 
     getSpeakParameters(tx, agentPars, pars, voice) {
+        super.loadReferenceAudioData(
+            this.getPreferredVoices(
+                this.config.agent.speak.preferredVoices)
+            || pars.voice.default,
+        )
+
         return {
             text: tx,
-            voice:
-                this.getPreferredVoices(
-                    this.config.agent.speak.preferredVoices)
-                || pars.voice.default,
             style:
                 agentPars.style
                 || pars.style.default,
-            reference_audio: '',
+            reference_audio: this.referenceAudioData,
             seed:
                 agentPars.seed
-                || pars.seed.default,
-            api_name: pars.api_name
+                || pars.seed.default
         };
     }
 
