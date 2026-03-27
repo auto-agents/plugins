@@ -43,6 +43,7 @@ export default class TTSWebUI {
 			const margin = ' '.repeat(this.outputContext.margin + this.outputContext.marginBase)
 			const margin2 = ' '.repeat(margin.length + this.outputContext.marginBase)
 			const apiId = this.apiId
+			this.config.agent.TTSApiId = apiId
 
 			//o.appendLine(toJson(this.config.agent.speak))
 

@@ -1,6 +1,6 @@
 import BridgeTTSBase from "./bridge-tts-base";
 
-export default class KokoroTTSBridge extends BridgeTTSBase {
+export default class KittenTTSBridge extends BridgeTTSBase {
 
     /**
      * new instance
@@ -26,18 +26,9 @@ export default class KokoroTTSBridge extends BridgeTTSBase {
                 this.getPreferredVoices(
                     this.config.agent.speak.preferredVoices)
                 || pars.voice.default,
-            speed:
-                agentPars.speed
-                || pars.speed.default,
-            use_gpu:
-                agentPars.use_gpu
-                || pars.use_gpu.default,
             model_name:
                 agentPars.model_name
-                || pars.model_name.default,
-            seed:
-                agentPars.seed
-                || pars.seed.default,
+                || pars.model_name.default
         };
     }
 
