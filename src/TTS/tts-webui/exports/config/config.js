@@ -353,6 +353,56 @@ export default function config(ctx) {
 								}
 							}
 						},
+
+						xttsSimple: {
+							bridgeFile: 'xtts-simple.js',
+							description: 'a Voice generation model that lets you clone voices into different languages by using just a quick 6-second audio clip. There is no need for an excessive amount of training data that spans countless hours. This is the same or similar model to what powers Coqui Studio and Coqui API',
+							paths: {
+								speak: {
+									uri: '/xtts_simple',
+									parameters: {
+										text: {
+											description: 'The input value that is provided in the "Text to generate" Textbox component.'
+										},
+										model_name: {
+											default: 'E:\\DEV\\repos\\auto-agents-ext\\tts-webui-installer\\data\\models\\xtts\\base',
+											description: 'model name',
+											possibleValues: ['base',
+												// specific to install path
+												'E:\\DEV\\repos\\auto-agents-ext\\tts-webui-installer\\data\\models\\xtts\\base']
+										},
+										language: {
+											default: 'fr',
+											possibleValues: ['en', 'fr'],
+											description: 'language code'
+										},
+										speaker: {
+											default: null
+										},
+										seed: {
+											default: 2044339735,
+											description: 'The input value that is provided in the "parameter_482" Textbox component.'
+										},
+										voice: {
+											default: 'alice.wav',
+											description: 'The input value that is provided in the "Reference Audio" Audio component. The FileData class is a subclass of the GradioModel class that represents a file object within a Gradio interface. It is used to store file data and metadata when a file is uploaded. Attributes: path: The server file path where the file is stored. url: The normalized server URL pointing to the file. size: The size of the file in bytes. orig_name: The original filename before upload. mime_type: The MIME type of the file. is_stream: Indicates whether the file is a stream. meta: Additional metadata used internally (should not be changed)'
+										}
+									},
+									return: {
+										['data[0]']: {
+											path: 'wav path in user gradio temp folder (eg. AppData\\Local\\Temp\\gradio\\)',
+											url: 'url to gradio file url',
+											size: 'wav size or null',
+											mime_type: 'mime type or null',
+											is_stream: 'true or false'
+										},
+										['data[1]']: "Phonetics tokens eg: tˈAk kˈɛɹ, ænd ɹəmˈɛmbəɹ",
+										['data[2]']: 'query payload',
+										['data[3]']: 'the tts web ui outputs folder for the generation (includes all files in various formats and metadata)',
+									}
+								}
+							}
+						},
 					}
 				}
 			}
