@@ -108,7 +108,7 @@ export default class TTSWebUI {
 		tool = tool.replace('{filePath}', filepath)
 		//tool = tool.replaceAll('\\', "\\\\")
 
-		await (this.exec(tool))
+		await (this.exec(tool))	// wait exec
 
 		/*const player = spawn(
 			tool,

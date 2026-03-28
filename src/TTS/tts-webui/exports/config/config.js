@@ -5,7 +5,7 @@ export default function config(ctx) {
 		modules: {
 			TTSWebUI: {
 				moduleId: 'TTSWebUI',
-				description: 'module for TTS WebUI. currently supports extensions for Kokoro, Kitten',
+				description: 'module for TTS WebUI. Supports extensions for Kokoro, Kitten, OpenVoice V1 & V2',
 				file: 'tts-web-ui-module.js',
 				category: 'TTS',
 
@@ -94,6 +94,16 @@ export default function config(ctx) {
 										}
 									},
 									return: {
+										['data[0]']: {
+											path: 'wav path in user gradio temp folder (eg. AppData\\Local\\Temp\\gradio\\)',
+											url: 'url to gradio file url',
+											size: 'wav size or null',
+											mime_type: 'mime type or null',
+											is_stream: 'true or false'
+										},
+										['data[1]']: "Phonetics tokens eg: tˈAk kˈɛɹ, ænd ɹəmˈɛmbəɹ",
+										['data[2]']: 'query payload',
+										['data[3]']: 'the tts web ui outputs folder for the generation (includes all files in various formats and metadata)',
 									}
 								}
 							}
@@ -150,7 +160,7 @@ export default function config(ctx) {
 							}
 						},
 
-						OpenVoiceV1: {
+						openVoiceV1: {
 							bridgeFile: 'open-voice-v1.js',
 							description: 'OpenVoice can accurately clone the reference tone color and generate speech in multiple languages and accents.  OpenVoice enables granular control over voice styles, such as emotion and accent, as well as other style parameters including rhythm, pauses, and intonation. Neither of the language of the generated speech nor the language of the reference speech needs to be presented in the massive-speaker multi-lingual training dataset.',
 							paths: {
@@ -177,12 +187,22 @@ export default function config(ctx) {
 										}
 									},
 									return: {
+										['data[0]']: {
+											path: 'wav path in user gradio temp folder (eg. AppData\\Local\\Temp\\gradio\\)',
+											url: 'url to gradio file url',
+											size: 'wav size or null',
+											mime_type: 'mime type or null',
+											is_stream: 'true or false'
+										},
+										['data[1]']: "Phonetics tokens eg: tˈAk kˈɛɹ, ænd ɹəmˈɛmbəɹ",
+										['data[2]']: 'query payload',
+										['data[3]']: 'the tts web ui outputs folder for the generation (includes all files in various formats and metadata)',
 									}
 								}
 							}
 						},
 
-						OpenVoiceV2: {
+						openVoiceV2: {
 							bridgeFile: 'open-voice-v2.js',
 							description: 'OpenVoice can accurately clone the reference tone color and generate speech in multiple languages and accents.  OpenVoice enables granular control over voice styles, such as emotion and accent, as well as other style parameters including rhythm, pauses, and intonation. Neither of the language of the generated speech nor the language of the reference speech needs to be presented in the massive-speaker multi-lingual training dataset.',
 							paths: {
@@ -218,6 +238,109 @@ export default function config(ctx) {
 										}
 									},
 									return: {
+										['data[0]']: {
+											path: 'wav path in user gradio temp folder (eg. AppData\\Local\\Temp\\gradio\\)',
+											url: 'url to gradio file url',
+											size: 'wav size or null',
+											mime_type: 'mime type or null',
+											is_stream: 'true or false'
+										},
+										['data[1]']: "Phonetics tokens eg: tˈAk kˈɛɹ, ænd ɹəmˈɛmbəɹ",
+										['data[2]']: 'query payload',
+										['data[3]']: 'the tts web ui outputs folder for the generation (includes all files in various formats and metadata)',
+									}
+								}
+							}
+						},
+
+						chatterBox: {
+							bridgeFile: 'chatter-box.js',
+							description: 'Chatterbox is a family of three state-of-the-art, open-source text-to-speech models by Resemble AI.',
+							paths: {
+								speak: {
+									uri: '/chatterbox_tts',
+									parameters: {
+										text: {
+											description: 'The input value that is provided in the "Text to generate" Textbox component.'
+										},
+										exaggeration: {
+											default: 0.5,
+											description: 'exaggeration'
+										},
+										cfg_weight: {
+											default: 0.5,
+											description: 'cfg_weight'
+										},
+										temperature: {
+											default: 0.8,
+											description: 'temperature'
+										},
+										audio_prompt_path: {
+											default: 'alice.wav',
+											description: 'The input value that is provided in the "Reference Audio" Audio component. The FileData class is a subclass of the GradioModel class that represents a file object within a Gradio interface. It is used to store file data and metadata when a file is uploaded. Attributes: path: The server file path where the file is stored. url: The normalized server URL pointing to the file. size: The size of the file in bytes. orig_name: The original filename before upload. mime_type: The MIME type of the file. is_stream: Indicates whether the file is a stream. meta: Additional metadata used internally (should not be changed)'
+										},
+										device: {
+											default: 'auto'
+										},
+										dtype: {
+											default: 'bfloat16'
+										},
+										model_name: {
+											default: 'multilingual',
+											possibleValues: ['just_a_placeholder', 'multilingual']
+										},
+										chunked: {
+											default: false
+										},
+										cpu_offload: {
+											default: false
+										},
+										cache_voice: {
+											default: true
+										},
+										desired_length: {
+											default: 200
+										},
+										max_length: {
+											default: 300
+										},
+										halve_first_chunk: {
+											default: false
+										},
+										initial_forward_pass_backend: {
+											default: 'eager'
+										},
+										generate_token_backend: {
+											default: 'cudagraphs-manual',
+											possibleValues: ['cudagraphs-manual', 'eager', 'cudagraphs', 'inductor', 'cudagraphs - strided', 'inductor - strided']
+										},
+										max_new_tokens: {
+											default: 1000
+										},
+										max_cache_len: {
+											default: 1500
+										},
+										language_id: {
+											default: 'fr',
+											possibleValues: ['en', 'fr'],
+											description: 'language id'
+										},
+										seed: {
+											default: 2044339735,
+											description: 'The input value that is provided in the "parameter_482" Textbox component.'
+										}
+									},
+									return: {
+										['data[0]']: {
+											path: 'wav path in user gradio temp folder (eg. AppData\\Local\\Temp\\gradio\\)',
+											url: 'url to gradio file url',
+											size: 'wav size or null',
+											mime_type: 'mime type or null',
+											is_stream: 'true or false'
+										},
+										['data[1]']: "Phonetics tokens eg: tˈAk kˈɛɹ, ænd ɹəmˈɛmbəɹ",
+										['data[2]']: 'query payload',
+										['data[3]']: 'the tts web ui outputs folder for the generation (includes all files in various formats and metadata)',
 									}
 								}
 							}

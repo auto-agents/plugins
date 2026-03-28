@@ -118,12 +118,8 @@ export default class BridgeTTSBase {
             && this.referenceAudioData
         ) return
 
-        this.referenceAudioPath = referenceAudio
-        this.referenceAudioData = null
-
-        if (!path.isAbsolute(referenceAudio))
-            referenceAudio = this.findReferenceAudioFile(referenceAudio)
-        if (!referenceAudio) throw SpeakerError.fromMessage('reference audio file not found: ' + referenceAudio)
+        this.getReferenceAudio(referenceAudio)
+        referenceAudio = this.referenceAudioPath
 
         if (this.config.dumpImportReferenceAudio)
             console.log('import reference audio file: ' + referenceAudio)
@@ -132,5 +128,20 @@ export default class BridgeTTSBase {
         const b = new Blob(d)
 
         this.referenceAudioData = b
+    }
+
+    getReferenceAudio(referenceAudio) {
+        if (this.referenceAudioPath == referenceAudio
+            && this.referenceAudioData
+        ) return
+
+        this.referenceAudioPath = referenceAudio
+        this.referenceAudioData = null
+
+        if (!path.isAbsolute(referenceAudio))
+            referenceAudio = this.findReferenceAudioFile(referenceAudio)
+        if (!referenceAudio) throw SpeakerError.fromMessage('reference audio file not found: ' + referenceAudio)
+
+        this.referenceAudioPath = referenceAudio
     }
 }
