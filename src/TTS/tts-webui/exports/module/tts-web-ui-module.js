@@ -12,21 +12,13 @@ import Server from '../../../shared/src/data/server.js';
 import SpeakerError from '../../../shared/src/data/speaker-error.js';
 */
 import { spawn } from 'child_process'
+import TTSModuleBase from "../../../tts-module-base";
 
-export default class TTSWebUI {
-
-	desc = 'TTS-WebUI module'
+export default class TTSWebUI extends TTSModuleBase {
 
 	constructor(ctx, config, outputContext, moduleSpec, overloadConfig = null) {
-		this.config = config
-		if (overloadConfig != null)
-			this.config = {
-				...this.config,
-				...overloadConfig
-			}
-		this.specification = moduleSpec
-		this.ctx = ctx
-		this.outputContext = outputContext
+		super(ctx, config, outputContext, moduleSpec, overloadConfig, 'TTS-WebUI module')
+
 		this.apiId = this.config.agent?.speak?.config?.api
 
 		const util = require('node:util');

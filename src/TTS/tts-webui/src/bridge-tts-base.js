@@ -1,7 +1,6 @@
 import { Client } from "@gradio/client";
 import { saveToTemp, toJson } from "../../../../../shared/src/utils/utils";
 import SpeakerError from "../../../../../shared/src/data/speaker-error";
-import { splitSentence } from "../../../../../shared/src/utils/text";
 import { FifoStack, task } from "../../../../../shared/src/utils/fifo-stack";
 import path from 'path'
 import { existsSync, readFileSync } from 'fs'
@@ -42,14 +41,6 @@ export default class BridgeTTSBase {
         }
     }
 
-    getSplits(text) {
-        const t = splitSentence(this.ctx, text)
-        if (this.ctx.dialoger.sentenceSpliter.dumpSplitsArray)
-            console.log(t)
-        this.ctx.dialoger.sentenceSpliter.lastSplit = t
-        return t
-    }
-
     getPreferredVoices(preferredVoices) {
         return preferredVoices[0]
     }
@@ -58,7 +49,9 @@ export default class BridgeTTSBase {
         this.pre_speak()
 
         try {
-            const t = this.getSplits(text)
+            const m = this.config.agent.TTSModule
+            text = m.runPreProcessors(text)
+            const t = m.getSplits(text)
 
             for (var i = 0; i < t.length; i++) {
 
