@@ -13,7 +13,7 @@ export default function config(ctx) {
 		modules: {
 			TTSWebUI: {
 				moduleId: 'TTSWebUI',
-				description: 'module for TTS WebUI. Supports extensions for Kokoro, Kitten, OpenVoice V1 & V2',
+				description: 'module for TTS WebUI. Supports extensions for Kokoro, Kitten, OpenVoice V1 & V2, Chatterbox, XTTS',
 				file: 'tts-web-ui-module.js',
 				category: 'TTS',
 
