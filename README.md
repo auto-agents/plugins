@@ -34,7 +34,9 @@
     - **Kitten TTS**
     - **OpenVoice V1**
     - **OpenVoice V2**
-    
+    - **ChatterBox**
+    - **XTTS**
+   
 #### STT
 
 - voice recognition : *Speak To Text* with any browser implementing `WebSpeechAPI` *(coming soon)*
