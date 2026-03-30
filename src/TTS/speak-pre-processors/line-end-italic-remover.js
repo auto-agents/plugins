@@ -34,8 +34,8 @@ export default class LineEndItalicRemover {
                     rmv += c
                     if (nc != eol) {
                         r += rmv
-                        rmv = ''
                     }
+                    rmv = ''
                 }
             } else {
                 if (x0 == -1) r += c
