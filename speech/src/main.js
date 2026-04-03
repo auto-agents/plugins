@@ -1,7 +1,7 @@
-import SpeechModule from './speech-module.js'
+import SpeechPlugin from './speech-plugin.js'
 
 async function main() {
-	const mod = SpeechModule.fromDefaultConfigFile()
+	const mod = SpeechPlugin.fromDefaultConfigFile()
 	await mod.launchServer()
 	await mod.openBrowser()
 }

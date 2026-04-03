@@ -1,10 +1,10 @@
 # command: `hugfc`
 
-Implements a new command named `hugfc`, according to the specification in file `modules/tasks/dev-com.md`. Write the result in the appropriate file in `modules/hugging-face/module/commands/` folder. 
+Implements a new command named `hugfc`, according to the specification in file `plugins/tasks/dev-com.md`. Write the result in the appropriate file in `plugins/hugging-face/plugin/commands/` folder. 
 
-update the property `cli.commands` in file `modules/hugging-face/module/config/config.js` to include the new command. Add the file and the property if they are missing. 
+update the property `cli.commands` in file `plugins/hugging-face/plugin/config/config.js` to include the new command. Add the file and the property if they are missing. 
 
-Implements a command implementation body in the run method of the command class. The body must find one parameter in `args` named `model`. It must call the python cli tool `modules/hugging-face/src/get_model_card/cli.py <modelName>` passing the model name as argument.
+Implements a command implementation body in the run method of the command class. The body must find one parameter in `args` named `model`. It must call the python cli tool `plugins/hugging-face/src/get_model_card/cli.py <modelName>` passing the model name as argument.
 
 Use as a model the command class in `cli/source/commands/agent-command.js` and its command descriptor in the file `cli/source/config/config.js`, the entry with `names: ['agent', 'ag', 'a']`
 
@@ -51,8 +51,8 @@ The command descriptor is given below:
 ## about the action value: 'fetch'
 
 this command allows to fetch informations about models from the **hugging face REST API**.
-- a JSON document is obtained from a `GET` request to the **URL** definied in the module specification `this.ctx.components.module.huggingFace.config.urls.fetchModels`
+- a JSON document is obtained from a `GET` request to the **URL** definied in the plugin specification `this.ctx.components.plugin.huggingFace.config.urls.fetchModels`
 - the implementation of the action `fetch` performs the **GET request** at this URL and get a JSON document listing models
-- then the `fetch` construct a `Javascript` object that is stored in the property `this.ctx.components.module.huggingFace.models`, the objects have a structure that match the **JSON** properties
+- then the `fetch` construct a `Javascript` object that is stored in the property `this.ctx.components.plugin.huggingFace.models`, the objects have a structure that match the **JSON** properties
 - then the `fetch` command output the number of models founded
 - if option name is specified output informations about the named model if founded

@@ -8,7 +8,7 @@
   "license": "ISC",
   "author": "franck gaspoz",
   "type": "commonjs",
-  "main": "tts-module-base.js",
+  "main": "tts-plugin-base.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

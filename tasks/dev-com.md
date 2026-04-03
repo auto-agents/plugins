@@ -1,4 +1,4 @@
-# Implementation Guide : Command in Module For Auto Agents
+# Implementation Guide : Command in Plugin For Auto Agents
 
 ## Overview
 
@@ -18,7 +18,7 @@ A command is defined by three main components:
 
 Use existing models of command specifications from the file `auto-agents/cli/source/config/config.js` in property `cli.commands`
 
-Add your command definition to the `cli.commands` array in `module/config/config.js`:
+Add your command definition to the `cli.commands` array in `plugin/config/config.js`:
 
 ```js
 {
@@ -37,7 +37,7 @@ In this document, `ctx` and `this.ctx` refers to the content of the js object sp
 
 ### Step 2: Create the Command File
 
-Create a new JavaScript file in `module/commands/` with the filename specified in the definition.
+Create a new JavaScript file in `plugin/commands/` with the filename specified in the definition.
 
 **File Naming Convention:**
 - Use kebab-case for the filename
@@ -82,7 +82,7 @@ The `ctx` parameter provides access to:
 - `ctx.data`: Data sources and gauges
 - `ctx.theme`: UI theme configuration
 - `ctx.layout`: Layout settings
-- `ctx.modules`: Module configurations
+- `ctx.plugins`: Plugin configurations
 - `ctx.cli`: CLI-specific settings and output
 
 ## Example Implementations

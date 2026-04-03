@@ -1,16 +1,16 @@
-# SpeechModule.js API Documentation
+# SpeechPlugin.js API Documentation
 
-This document describes the usage of the `SpeechModule` class, which provides a JavaScript API for controlling the speech module server and browser interface.
+This document describes the usage of the `SpeechPlugin` class, which provides a JavaScript API for controlling the speech plugin server and browser interface.
 
 ## Overview
 
-The `SpeechModule` class is a wrapper around the speech module's HTTP REST API and WebSocket server. It provides methods for server lifecycle management, browser control, text-to-speech functionality, and status querying.
+The `SpeechPlugin` class is a wrapper around the speech plugin's HTTP REST API and WebSocket server. It provides methods for server lifecycle management, browser control, text-to-speech functionality, and status querying.
 
 ## Constructor
 
-### `new SpeechModule({ config })`
+### `new SpeechPlugin({ config })`
 
-Creates a new instance of the SpeechModule.
+Creates a new instance of the SpeechPlugin.
 
 **Parameters:**
 - `config` (Object): Configuration object containing:
@@ -23,7 +23,7 @@ Creates a new instance of the SpeechModule.
 
 **Example:**
 ```javascript
-import SpeechModule from './speech-module.js'
+import SpeechPlugin from './speech-plugin.js'
 
 const config = {
   port: 3000,
@@ -32,12 +32,12 @@ const config = {
   apiKey: "your-api-key"
 }
 
-const speechModule = new SpeechModule({ config })
+const speechPlugin = new SpeechPlugin({ config })
 ```
 
 ## Static Methods
 
-### `SpeechModule.readConfigFile(configFilePath)`
+### `SpeechPlugin.readConfigFile(configFilePath)`
 
 Reads and parses a JSON configuration file.
 
@@ -49,20 +49,20 @@ Reads and parses a JSON configuration file.
 
 **Example:**
 ```javascript
-const config = SpeechModule.readConfigFile('./config/config.json')
-const module = new SpeechModule({ config })
+const config = SpeechPlugin.readConfigFile('./config/config.json')
+const plugin = new SpeechPlugin({ config })
 ```
 
-### `SpeechModule.fromDefaultConfigFile()`
+### `SpeechPlugin.fromDefaultConfigFile()`
 
-Creates a SpeechModule instance using the default configuration file.
+Creates a SpeechPlugin instance using the default configuration file.
 
 **Returns:**
-- SpeechModule: New instance with default config loaded
+- SpeechPlugin: New instance with default config loaded
 
 **Example:**
 ```javascript
-const speechModule = SpeechModule.fromDefaultConfigFile()
+const speechPlugin = SpeechPlugin.fromDefaultConfigFile()
 ```
 
 ## Instance Methods
@@ -71,7 +71,7 @@ const speechModule = SpeechModule.fromDefaultConfigFile()
 
 #### `async launchServer()`
 
-Starts the speech module server if not already running.
+Starts the speech plugin server if not already running.
 
 **Behavior:**
 - Creates a new SpeechServer instance with the current config
@@ -80,13 +80,13 @@ Starts the speech module server if not already running.
 
 **Example:**
 ```javascript
-await speechModule.launchServer()
+await speechPlugin.launchServer()
 console.log('Server is running')
 ```
 
 #### `async stopServer()`
 
-Stops the speech module server if running.
+Stops the speech plugin server if running.
 
 **Behavior:**
 - Stops the HTTP and WebSocket servers
@@ -95,7 +95,7 @@ Stops the speech module server if running.
 
 **Example:**
 ```javascript
-await speechModule.stopServer()
+await speechPlugin.stopServer()
 console.log('Server stopped')
 ```
 
@@ -113,8 +113,8 @@ Opens the SPA in the configured browser.
 
 **Example:**
 ```javascript
-await speechModule.openBrowser()
-console.log(`Browser opened at ${speechModule.spaUrl()}`)
+await speechPlugin.openBrowser()
+console.log(`Browser opened at ${speechPlugin.spaUrl()}`)
 ```
 
 ### Text-to-Speech
@@ -140,12 +140,12 @@ Speaks a sentence using the speech synthesis API.
 **Example:**
 ```javascript
 // Speak with default voice
-await speechModule.speak({ 
+await speechPlugin.speak({ 
   sentence: "Hello world" 
 })
 
 // Speak with specific voice and API key
-await speechModule.speak({ 
+await speechPlugin.speak({ 
   sentence: "Hello world", 
   voice: "Microsoft Zira Desktop",
   apiKey: "custom-api-key"
@@ -156,7 +156,7 @@ await speechModule.speak({
 
 #### `async getRunningStatus()`
 
-Gets the current running status of the speech module.
+Gets the current running status of the speech plugin.
 
 **Returns:**
 - Object: Status information including:
@@ -166,7 +166,7 @@ Gets the current running status of the speech module.
 
 **Example:**
 ```javascript
-const status = await speechModule.getRunningStatus()
+const status = await speechPlugin.getRunningStatus()
 console.log(`Status: ${status.runningStatus}`)
 console.log(`Voices available: ${status.voiceCount}`)
 ```
@@ -181,7 +181,7 @@ Gets the list of available voices from the server.
 
 **Example:**
 ```javascript
-const capabilities = await speechModule.getVoices()
+const capabilities = await speechPlugin.getVoices()
 console.log(`Available voices: ${capabilities.voiceList.length}`)
 capabilities.voiceList.forEach(voice => {
   console.log(`- ${voice.name} (${voice.lang})`)
@@ -199,7 +199,7 @@ Gets the base URL of the server.
 
 **Example:**
 ```javascript
-const url = speechModule.baseUrl()
+const url = speechPlugin.baseUrl()
 console.log(`Server URL: ${url}`)
 ```
 
@@ -212,7 +212,7 @@ Gets the URL of the SPA.
 
 **Example:**
 ```javascript
-const spaUrl = speechModule.spaUrl()
+const spaUrl = speechPlugin.spaUrl()
 console.log(`SPA URL: ${spaUrl}`)
 ```
 
@@ -234,10 +234,10 @@ Waits for the running status to match an expected value.
 **Example:**
 ```javascript
 // Wait for speech to start
-await speechModule.waitForRunningStatus({ expected: 'speaking' })
+await speechPlugin.waitForRunningStatus({ expected: 'speaking' })
 
 // Wait for speech to complete
-await speechModule.waitForRunningStatus({ expected: 'idle' })
+await speechPlugin.waitForRunningStatus({ expected: 'idle' })
 ```
 
 #### `async waitForVoices({ timeoutMs, pollMs })`
@@ -256,46 +256,46 @@ Waits for voices to become available.
 
 **Example:**
 ```javascript
-const voices = await speechModule.waitForVoices()
+const voices = await speechPlugin.waitForVoices()
 console.log(`Found ${voices.length} voices`)
 ```
 
 ## Complete Usage Example
 
 ```javascript
-import SpeechModule from './speech-module.js'
+import SpeechPlugin from './speech-plugin.js'
 
 async function main() {
-  // Create module with default config
-  const speechModule = SpeechModule.fromDefaultConfigFile()
+  // Create plugin with default config
+  const speechPlugin = SpeechPlugin.fromDefaultConfigFile()
   
   try {
     // Start the server
-    await speechModule.launchServer()
-    console.log(`Server started at ${speechModule.baseUrl()}`)
+    await speechPlugin.launchServer()
+    console.log(`Server started at ${speechPlugin.baseUrl()}`)
     
     // Open browser
-    await speechModule.openBrowser()
-    console.log(`Browser opened at ${speechModule.spaUrl()}`)
+    await speechPlugin.openBrowser()
+    console.log(`Browser opened at ${speechPlugin.spaUrl()}`)
     
     // Wait for voices to be available
-    const voices = await speechModule.waitForVoices()
+    const voices = await speechPlugin.waitForVoices()
     console.log(`Available voices: ${voices.length}`)
     
     // Get current status
-    const status = await speechModule.getRunningStatus()
+    const status = await speechPlugin.getRunningStatus()
     console.log(`Current status: ${status.runningStatus}`)
     
     // Speak something
-    await speechModule.speak({ 
-      sentence: "Hello from the SpeechModule API!",
+    await speechPlugin.speak({ 
+      sentence: "Hello from the SpeechPlugin API!",
       voice: voices[0].name
     })
     console.log("Speech completed")
     
   } finally {
     // Clean up
-    await speechModule.stopServer()
+    await speechPlugin.stopServer()
     console.log("Server stopped")
   }
 }
@@ -348,8 +348,8 @@ The configuration object should follow this structure:
 
 ## Notes
 
-- The module manages server state internally; multiple `launchServer()` calls are safe
+- The plugin manages server state internally; multiple `launchServer()` calls are safe
 - Browser processes are launched detached and won't block the Node.js process
 - The `speak()` method automatically waits for speech completion
 - All HTTP requests include proper error handling and timeout management
-- The module is designed for both programmatic use and CLI tool implementation
+- The plugin is designed for both programmatic use and CLI tool implementation

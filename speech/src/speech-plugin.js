@@ -38,7 +38,7 @@ function resolveRunCommand(browserCfg, platformKey) {
 	return null
 }
 
-export default class SpeechModule {
+export default class SpeechPlugin {
 
 	constructor({ config }) {
 		this.config = config
@@ -53,7 +53,7 @@ export default class SpeechModule {
 
 	static fromDefaultConfigFile() {
 		const configFilePath = path.resolve(__dirname, 'config', 'config.json')
-		return new SpeechModule({ config: SpeechModule.readConfigFile(configFilePath) })
+		return new SpeechPlugin({ config: SpeechPlugin.readConfigFile(configFilePath) })
 	}
 
 	baseUrl() {

@@ -40,7 +40,7 @@ export default class HugfcCommand extends Command {
 
 				const scriptPath = path.join(
 					process.cwd(),
-					this.ctx.paths.modules,
+					this.ctx.paths.plugins,
 					'hugging-face',
 					'src',
 					'get_model_card',
@@ -90,11 +90,11 @@ export default class HugfcCommand extends Command {
 			case 'fetch':
 
 				const output = this.ctx.components.output
-				const mod = this.ctx.components.module.huggingFace
+				const mod = this.ctx.components.plugin.huggingFace
 				const url = mod.config?.urls?.fetchModels
 
 				if (!url) {
-					this.emitCommandError("missing url: this.ctx.modules.huggingFace.config.urls.fetchModels")
+					this.emitCommandError("missing url: this.ctx.plugins.huggingFace.config.urls.fetchModels")
 					return
 				}
 
@@ -177,7 +177,7 @@ export default class HugfcCommand extends Command {
 	}
 
 	setTable(json, options) {
-		const mod = this.ctx.components.module.huggingFace
+		const mod = this.ctx.components.plugin.huggingFace
 		mod.json = json
 		const count = json.length
 		var cnt = Math.min(mod.config.pageSize, count)
@@ -247,7 +247,7 @@ export default class HugfcCommand extends Command {
 	}
 
 	setPage(noPage, options) {
-		const mod = this.ctx.components.module.huggingFace
+		const mod = this.ctx.components.plugin.huggingFace
 		const t = mod.models
 		const count = t.length
 		var cnt = Math.min(mod.config.pageSize, count)
@@ -268,7 +268,7 @@ export default class HugfcCommand extends Command {
 	}
 
 	displayTable() {
-		const mod = this.ctx.components.module.huggingFace
+		const mod = this.ctx.components.plugin.huggingFace
 		const {
 			table,
 			noPage,
@@ -344,7 +344,7 @@ export default class HugfcCommand extends Command {
 	}
 
 	onKeyboardEvent(k) {
-		const mod = this.ctx.components.module.huggingFace
+		const mod = this.ctx.components.plugin.huggingFace
 		const table = mod.table
 		const e = this.ctx.components.event
 		const o = this.ctx.components.output
@@ -568,7 +568,7 @@ export default class HugfcCommand extends Command {
 	}
 
 	toLittleJson(idx, modelInfo) {
-		const mod = this.ctx.components.module.huggingFace
+		const mod = this.ctx.components.plugin.huggingFace
 		const originalId = modelInfo.id
 		var id = modelInfo.id
 		id = this.transformId(id)

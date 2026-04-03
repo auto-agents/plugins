@@ -5,7 +5,7 @@ export default class OpenVoiceV1Bridge extends BridgeTTSBase {
     /**
      * new instance
      * @param {Object} ctx context
-     * @param {Object} config module config
+     * @param {Object} config plugin config
      * @param {Object} apiConfig api config
      * @param {String} baseUrl base url
      */
@@ -13,7 +13,7 @@ export default class OpenVoiceV1Bridge extends BridgeTTSBase {
         super(ctx, config, apiConfig, baseUrl)
     }
 
-    /* ---- TTS module interface impl ---- */
+    /* ---- TTS plugin interface impl ---- */
 
     async speak(text, voice = null) {
         await super.speak(text, voice)

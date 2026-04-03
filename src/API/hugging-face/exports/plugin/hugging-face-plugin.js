@@ -1,21 +1,21 @@
-export default class HuggingFaceModule {
+export default class HuggingFacePlugin {
 
-	constructor(ctx, config, outputContext, moduleSpec) {
+	constructor(ctx, config, outputContext, pluginSpec) {
 		this.config = config
-		this.specification = moduleSpec
+		this.specification = pluginSpec
 		this.ctx = ctx
 		this.outputContext = outputContext
 	}
 
 	/**
-	 * module init
+	 * plugin init
 	 */
 	async init() {
-		this.ctx.components.module.huggingFace = this
+		this.ctx.components.plugin.huggingFace = this
 	}
 
 	/**
-	 * unload module
+	 * unload plugin
 	 * @param {Object} outputContext
 	 */
 	async unload(outputContext) {
@@ -23,6 +23,6 @@ export default class HuggingFaceModule {
 		const o = oc.output
 		const margin = ' '.repeat(oc.margin + oc.marginBase)
 
-		this.ctx.components.module.huggingFace = null
+		this.ctx.components.plugin.huggingFace = null
 	}
 }

@@ -1,10 +1,10 @@
-# Speech Module CLI Commands Usage
+# Speech Plugin CLI Commands Usage
 
-This document describes the command-line interface (CLI) commands available for the speech module.
+This document describes the command-line interface (CLI) commands available for the speech plugin.
 
 ## Overview
 
-The speech module provides several CLI commands that allow you to control the speech server, open the browser interface, speak text, and query system status. All commands are accessible via npm scripts in the `modules/speech/package.json` file.
+The speech plugin provides several CLI commands that allow you to control the speech server, open the browser interface, speak text, and query system status. All commands are accessible via npm scripts in the `plugins/speech/package.json` file.
 
 ## Common Parameters
 
@@ -19,7 +19,7 @@ All commands support the following common parameters:
 
 **Command:** `npm run cmd:launch-server`
 
-**Description:** Starts the speech module server and keeps it running until interrupted.
+**Description:** Starts the speech plugin server and keeps it running until interrupted.
 
 **Usage:**
 ```bash
@@ -93,7 +93,7 @@ npm run cmd:speak -- --sentence "Hello world" --apiKey "your-api-key"
 
 **Command:** `npm run cmd:get-running-status`
 
-**Description:** Queries and displays the current running status of the speech module.
+**Description:** Queries and displays the current running status of the speech plugin.
 
 **Usage:**
 ```bash
@@ -158,7 +158,7 @@ npm run cmd:get-voices -- --launch --wait
 
 3. **Speak some text:**
    ```bash
-   npm run cmd:speak -- --sentence "Hello from the speech module" --no-launch --no-browser
+   npm run cmd:speak -- --sentence "Hello from the speech plugin" --no-launch --no-browser
    ```
 
 4. **Check status:**

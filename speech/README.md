@@ -8,7 +8,7 @@
 
 ---
 
-**This repository contains the auto agents speech module**
+**This repository contains the auto agents speech plugin**
 </td>
 <td>
 <img src="assets/agent-5.jfif" alt="Auto Agents" width="800px">
@@ -20,15 +20,15 @@
 
 ## built within:
 
-- specifications in file [`specifications/speech-module-model.md`](specifications/speech-module-model.md)
+- specifications in file [`specifications/speech-plugin-model.md`](specifications/speech-plugin-model.md)
 - guidelines in file [`doc/implementation.md` ](doc/implementation.md)
-- tasks in file [`tasks/dev-speech-module.md`](tasks/dev-speech-module.md)
+- tasks in file [`tasks/dev-speech-plugin.md`](tasks/dev-speech-plugin.md)
 
 ## check documentation:
 
 - [user documentation](doc/user-doc.md)
 - [commands usage](doc/commands-usage.md)
-- [speech module usage](doc/speech-module-usage.md)
+- [speech plugin usage](doc/speech-plugin-usage.md)
 
 <br>
 

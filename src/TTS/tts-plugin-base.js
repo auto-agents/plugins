@@ -4,13 +4,13 @@ import Status from "../../../shared/src/utils/status"
 import { splitSentence } from "../../../shared/src/utils/text/text"
 import { existsSync } from "fs";
 
-export default class TTSModuleBase {
+export default class TTSPluginBase {
 
     speakPreProcessors = []
 
-    constructor(ctx, config, outputContext, moduleSpec, overloadConfig = null, desc) {
+    constructor(ctx, config, outputContext, pluginSpec, overloadConfig = null, desc) {
         this.desc = desc
-        this.specification = moduleSpec
+        this.specification = pluginSpec
         this.ctx = ctx
         this.status = new Status(ctx)
         this.config = config

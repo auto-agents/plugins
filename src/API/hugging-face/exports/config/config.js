@@ -2,11 +2,11 @@ import chalk from 'chalk'
 
 export default function config() {
 	return {
-		modules: {
+		plugins: {
 			huggingFace: {
-				moduleId: 'huggingFace',
-				description: 'hugging face hub access module',
-				file: 'hugging-face-module.js',
+				pluginId: 'huggingFace',
+				description: 'hugging face hub access plugin',
+				file: 'hugging-face-plugin.js',
 				category: 'API',
 
 				autoLoad: true,

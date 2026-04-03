@@ -1,6 +1,6 @@
 import path from 'path'
 import { fileURLToPath } from 'url'
-import SpeechModule from '../speech-module.js'
+import SpeechPlugin from '../speech-plugin.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -17,7 +17,7 @@ function getArgValue(name) {
 
 async function main() {
 	const configPath = getArgValue('--config') || path.resolve(__dirname, '..', 'config', 'config.json')
-	const mod = new SpeechModule({ config: SpeechModule.readConfigFile(configPath) })
+	const mod = new SpeechPlugin({ config: SpeechPlugin.readConfigFile(configPath) })
 	const launch = hasFlag('--launch')
 
 	if (launch) await mod.launchServer()

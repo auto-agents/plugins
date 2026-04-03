@@ -1,9 +1,9 @@
-import SpeechModule from './speech-module.js'
+import SpeechPlugin from './speech-plugin.js'
 
 async function main() {
-	const mod = SpeechModule.fromDefaultConfigFile()
-	console.log(`speech module test: platform=${mod.config.platform || 'windows'} browser=${mod.config.browser || 'edge'}`)
-	console.log(`speech module test: spa url: ${mod.spaUrl()}`)
+	const mod = SpeechPlugin.fromDefaultConfigFile()
+	console.log(`speech plugin test: platform=${mod.config.platform || 'windows'} browser=${mod.config.browser || 'edge'}`)
+	console.log(`speech plugin test: spa url: ${mod.spaUrl()}`)
 
 	process.on('SIGINT', async () => {
 		await mod.stopServer()

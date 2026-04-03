@@ -1,7 +1,7 @@
 {
-  "name": "auto-agents-module-speech",
+  "name": "auto-agents-plugin-speech",
   "version": "1.0.0",
-  "description": "speech module",
+  "description": "speech plugin",
   "main": "src/main.js",
   "type": "module",
   "scripts": {

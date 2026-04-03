@@ -12,12 +12,12 @@ import Server from '../../../shared/src/data/server.js';
 import SpeakerError from '../../../shared/src/data/speaker-error.js';
 */
 import { spawn } from 'child_process'
-import TTSModuleBase from "../../../tts-module-base";
+import TTSPluginBase from "../../../tts-plugin-base";
 
-export default class TTSWebUI extends TTSModuleBase {
+export default class TTSWebUI extends TTSPluginBase {
 
-	constructor(ctx, config, outputContext, moduleSpec, overloadConfig = null) {
-		super(ctx, config, outputContext, moduleSpec, overloadConfig, 'TTS-WebUI module')
+	constructor(ctx, config, outputContext, pluginSpec, overloadConfig = null) {
+		super(ctx, config, outputContext, pluginSpec, overloadConfig, 'TTS-WebUI plugin')
 
 		this.apiId = this.config.agent?.speak?.config?.api
 
@@ -26,7 +26,7 @@ export default class TTSWebUI extends TTSModuleBase {
 	}
 
 	/**
-	 * module init
+	 * plugin init
 	 */
 	async init() {
 
@@ -90,7 +90,7 @@ export default class TTSWebUI extends TTSModuleBase {
 		}
 	}
 
-	// TODO: in config + a module or a component
+	// TODO: in config + a plugin or a component
 	async playSoundWithShell(filepath) {
 		var tool = this.ctx.shell.playSound[
 			this.ctx.shell.platform
@@ -124,28 +124,28 @@ export default class TTSWebUI extends TTSModuleBase {
 	}
 
 	/**
-	 * unload module
+	 * unload plugin
 	 * @param {Object} outputContext
 	 */
 	async unload(outputContext) {
 		const { oc, o, margin } = this.#getOutput(outputContext)
 	}
 
-	/* ---- TTS module interface impl ---- */
+	/* ---- TTS plugin interface impl ---- */
 	/* ---- rely on the API bridge ---- */
 
 	async speak(text, voice = null) {
-		this.#assertSpeakModuleImplAvailable()
+		this.#assertSpeakPluginImplAvailable()
 		//console.log(`[TTS:${this.apiId}]`)
 		return await this.apiBridge.speak(text, voice)
 	}
 
 	async waitIdle(timeout) {
-		this.#assertSpeakModuleImplAvailable()
+		this.#assertSpeakPluginImplAvailable()
 	}
 
 	async shetUp() {
-		this.#assertSpeakModuleImplAvailable()
+		this.#assertSpeakPluginImplAvailable()
 	}
 
 	getPreferredVoices(preferredVoices) {
@@ -153,8 +153,8 @@ export default class TTSWebUI extends TTSModuleBase {
 
 	/* <---- ---- */
 
-	#assertSpeakModuleImplAvailable() {
-		if (!this.config.agent.apiBridge) throw new SpeakerError('TTS module bridge implementation not available (null)')
+	#assertSpeakPluginImplAvailable() {
+		if (!this.config.agent.apiBridge) throw new SpeakerError('TTS plugin bridge implementation not available (null)')
 	}
 
 	#getOutput(outputContext) {

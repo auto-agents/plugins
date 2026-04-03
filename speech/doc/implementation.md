@@ -1,8 +1,8 @@
-## Speech module implementation
+## Speech plugin implementation
 
-## What the speech module should be
+## What the speech plugin should be
 
-From `modules/speech/specifications/speech-module-model.md`, the module is:
+From `plugins/speech/specifications/speech-plugin-model.md`, the plugin is:
 
 - A standalone Node.js service exposing an HTTP REST API (Express).
 - It launches a browser that runs a single-page web app using the Web Speech API.
@@ -17,7 +17,7 @@ From `modules/speech/specifications/speech-module-model.md`, the module is:
 
 Responsibilities:
 
-- Load config from `modules/speech/src/config/config.json`:
+- Load config from `plugins/speech/src/config/config.json`:
   - `apiKey`
   - `platform` (`linux` | `windows` | `mac`, default `windows`)
   - `browser` (browser key to be launched, default `edge`)
@@ -150,7 +150,7 @@ Because voice enumeration is browser-side, Node learns this list from the SPA.
 In `cli/source/config/config.js` you already have:
 
 ```js
-modules: {
+plugins: {
   speech: {
     enabled: true,
     browserStartCommand: 'edge',
@@ -161,16 +161,16 @@ modules: {
 
 So a natural integration is:
 
-- CLI starts the speech module service if it is not already running.
+- CLI starts the speech plugin service if it is not already running.
 - CLI sends HTTP requests (e.g. `POST /speak`) when a command like `/speak hello` is invoked.
 
 ## Files
 
-- the module is implemented in `modules/speech/src`
-- the SPA files are in `modules/speech/src/spa`
-- the backend filed are in `modules/speech/src/backend`
-- the main file is in `modules/speech/src/main.js`
-- the configuration file is in `modules/speech/src/config/config.json`
-- the specification file is in `modules/speech/specifications/speech-module-model.md`
-- your implementation guidelines are in `modules/speech/doc/implementation.md`
-- the tasks are in `modules/speech/tasks`
+- the plugin is implemented in `plugins/speech/src`
+- the SPA files are in `plugins/speech/src/spa`
+- the backend filed are in `plugins/speech/src/backend`
+- the main file is in `plugins/speech/src/main.js`
+- the configuration file is in `plugins/speech/src/config/config.json`
+- the specification file is in `plugins/speech/specifications/speech-plugin-model.md`
+- your implementation guidelines are in `plugins/speech/doc/implementation.md`
+- the tasks are in `plugins/speech/tasks`

@@ -10,11 +10,11 @@ export default function config(ctx) {
 				"C:\\Users\\franc\\AppData\\Local\\Temp\\gradio\\"
 			]
 		},
-		modules: {
+		plugins: {
 			TTSWebUI: {
-				moduleId: 'TTSWebUI',
-				description: 'module for TTS WebUI. Supports extensions for Kokoro, Kitten, OpenVoice V1 & V2, Chatterbox, XTTS',
-				file: 'tts-web-ui-module.js',
+				pluginId: 'TTSWebUI',
+				description: 'plugin for TTS WebUI. Supports extensions for Kokoro, Kitten, OpenVoice V1 & V2, Chatterbox, XTTS',
+				file: 'tts-web-ui-plugin.js',
 				category: 'TTS',
 
 				autoLoad: false,
@@ -27,16 +27,16 @@ export default function config(ctx) {
 					port: 7770,
 					dumpSearchReferenceAudio: false,
 					dumpImportReferenceAudio: false,
-					// todo: load module import from this module
-					soundPlayerModule: 'Sound/shell-player',
+					// todo: load plugin import from this plugin
+					soundPlayerPlugin: 'Sound/shell-player',
 					paths: {
 						// todo: dynamic path
 						basePath: 'E:\\DEV\\repos\\auto-agents-ext\\tts-webui-installer',
 						voices: [
-							// in modules path
+							// in plugins path
 							path.join(
 								process.cwd(),
-								ctx.paths.importModules,
+								ctx.paths.importPlugins,
 								'TTS',
 								'voices'
 							),

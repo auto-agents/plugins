@@ -16,7 +16,7 @@ export default class BridgeTTSBase {
     /**
          * new instance
          * @param {Object} ctx context
-         * @param {Object} config module config
+         * @param {Object} config plugin config
          * @param {Object} apiConfig api config
          * @param {String} baseUrl base url
          */
@@ -49,7 +49,7 @@ export default class BridgeTTSBase {
         this.pre_speak()
 
         try {
-            const m = this.config.agent.TTSModule
+            const m = this.config.agent.TTSPlugin
             text = m.runPreProcessors(text)
             const t = m.getSplits(text)
 
