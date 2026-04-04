@@ -147,7 +147,7 @@ Because voice enumeration is browser-side, Node learns this list from the SPA.
 
 ## Fit with the CLI config
 
-In `cli/source/config/config.js` you already have:
+In `cli/src/config/config.js` you already have:
 
 ```js
 plugins: {

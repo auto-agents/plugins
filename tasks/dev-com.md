@@ -10,13 +10,13 @@ A command is defined by three main components:
 
 1. **Command Definition** - Configuration in `config/config.js`
 2. **Command Implementation** - JavaScript class in `commands/` directory
-3. **Command Registration** - Automatic discovery by the command controller in `auto-agents/cli/source/controllers/command-controller.js`
+3. **Command Registration** - Automatic discovery by the command controller in `auto-agents/cli/src/controllers/command-controller.js`
 
 ## Implementation Steps
 
 ### Step 1: Define the Command
 
-Use existing models of command specifications from the file `auto-agents/cli/source/config/config.js` in property `cli.commands`
+Use existing models of command specifications from the file `auto-agents/cli/src/config/config.js` in property `cli.commands`
 
 Add your command definition to the `cli.commands` array in `plugin/config/config.js`:
 

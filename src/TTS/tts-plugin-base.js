@@ -1,5 +1,5 @@
 import path from "node:path"
-import SpinnerService from "../../../cli/source/services/spinner-service"
+import SpinnerService from "../../../cli/src/services/spinner-service"
 import Status from "../../../shared/src/utils/status"
 import { splitSentence } from "../../../shared/src/utils/text/text"
 import { existsSync } from "fs";

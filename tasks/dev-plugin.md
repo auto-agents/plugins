@@ -15,7 +15,7 @@ A plugin is defined by three main components:
 
 1. **Plugin Definition** - Configuration in `config/config.js` in property `plugins`
 2. **Plugin Implementation** - JavaScript class in `plugins/` directory
-3. **Plugin Registration** - Automatic discovery by the command controller in `auto-agents/cli/source/controllers/plugin-controller.js`
+3. **Plugin Registration** - Automatic discovery by the command controller in `auto-agents/cli/src/controllers/plugin-controller.js`
 
 ## Implementation Steps
 
@@ -24,7 +24,7 @@ A plugin is defined by three main components:
 - A plugin is specified by `js properties` in the file `plugins/{pluginName}/plugin/config/config.js` in the property `plugins` 
 - the plugin specification object is defined as follows:
 
-Use existing models of command specifications as examples from the file `auto-agents/cli/source/config/config.js` in property `cli.plugins`
+Use existing models of command specifications as examples from the file `auto-agents/cli/src/config/config.js` in property `cli.plugins`
 
 In this document, `ctx` and `this.ctx` refers to the content of the js object specified in `config.js` that is returned by the function `config(cli)`, and `{pluginName}` must be substituted by the plugin name (camel case)
 
@@ -121,7 +121,7 @@ where:
 - `MyClassName`:  the class name corresponding to the plugin name according to the naming conventions indicated above
 - `ctx`:  the configuration object provided by the file `config.js`
 - `pluginSpec`:  the plugin configuration object provided by the file `config.js`, in the property `plugins.{pluginId}`
-- `outputContext`: the output context to be used by the plugin implementation for needs of output strings on display. this is an object of type `OutputContet` defined in the file `cli/source/data/output-context.js`
+- `outputContext`: the output context to be used by the plugin implementation for needs of output strings on display. this is an object of type `OutputContet` defined in the file `cli/src/data/output-context.js`
 
 Keep the commentaries as provided in the code example
 
