@@ -77,10 +77,10 @@ export default class BridgeTTSBase {
                 const audio_filepath = result.data[0].path
 
                 const gradio_gen_folder = path.dirname(audio_filepath)
-                const ttswebui_gen_folder = result.data.length >= 3 ? path.join(
+                const ttswebui_gen_folder = path.join(
                     this.config.paths.basePath,
-                    result.data[2]
-                ) : null
+                    result.data[result.data.length - 1]
+                )
 
                 this.speakStack.addTask(
                     task(
@@ -89,8 +89,10 @@ export default class BridgeTTSBase {
                         async () => {
                             await this.config.playSoundFunc(audio_filepath)
                             if (this.config.autoCleanupOutput) {
-                                rm(gradio_gen_folder, { recursive: true, force: true })
-                                rm(ttswebui_gen_folder, { recursive: true, force: true })
+                                if (existsSync(gradio_gen_folder))
+                                    rm(gradio_gen_folder, { recursive: true, force: true })
+                                if (existsSync(ttswebui_gen_folder))
+                                    rm(ttswebui_gen_folder, { recursive: true, force: true })
                             }
                         }
                     ))
