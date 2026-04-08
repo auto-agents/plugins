@@ -138,6 +138,11 @@ export default class TTSWebUI extends TTSPluginBase {
 
 	async shetUp() {
 		this.#assertSpeakPluginImplAvailable()
+		try {
+			await this.apiBridge.shetUp()
+		} catch (err) {
+			throw SpeakerError.fromErr('shet up fail', err)
+		}
 	}
 
 	getPreferredVoices(preferredVoices) {

@@ -44,8 +44,5 @@ export default class KokoroTTSBridge extends BridgeTTSBase {
     async waitIdle(timeout) {
     }
 
-    async shetUp() {
-    }
-
     /* <---- ---- */
 }

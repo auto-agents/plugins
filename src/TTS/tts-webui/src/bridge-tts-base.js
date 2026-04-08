@@ -13,6 +13,7 @@ export default class BridgeTTSBase {
     speakStackRunDelay = 100
     referenceAudioPath = null
     referenceAudioData = null
+    shetUpNow = false
 
     /**
          * new instance
@@ -46,6 +47,12 @@ export default class BridgeTTSBase {
         return preferredVoices[0]
     }
 
+    async shetUp() {
+        if (!this.speakStack) return
+        this.shetUpNow = true
+        await this.speakStack.clearTasks()
+    }
+
     async speak(text, voice = null) {
         this.pre_speak()
 
@@ -56,47 +63,52 @@ export default class BridgeTTSBase {
 
             for (var i = 0; i < t.length; i++) {
 
-                const tx = t[i]
-                if (this.ctx.dialoger.sentenceSpliter.dumpSplits)
-                    console.log(tx)
+                if (!this.shetUpNow) {
+                    const tx = t[i]
+                    if (this.ctx.dialoger.sentenceSpliter.dumpSplits)
+                        console.log(tx)
 
-                const cnf = this.apiConfig.paths.speak
-                const pars = cnf.parameters
-                const agentPars = this.config.agent.speak.config || {}
+                    const cnf = this.apiConfig.paths.speak
+                    const pars = cnf.parameters
+                    const agentPars = this.config.agent.speak.config || {}
 
-                const client = await Client.connect(this.baseUrl)
+                    const client = await Client.connect(this.baseUrl)
 
-                const result = await client.predict(
-                    cnf.uri,
-                    this.getSpeakParameters(tx, agentPars, pars, voice)
-                ).catch(err0 => {
-                    throw SpeakerError.fromErr('speak fail', err0)
-                })
+                    const result = await client.predict(
+                        cnf.uri,
+                        this.getSpeakParameters(tx, agentPars, pars, voice)
+                    ).catch(err0 => {
+                        throw SpeakerError.fromErr('speak fail', err0)
+                    })
 
-                saveToTemp(this.ctx, 'tts.json', toJson(result))
-                const audio_filepath = result.data[0].path
+                    saveToTemp(this.ctx, 'tts.json', toJson(result))
+                    const audio_filepath = result.data[0].path
 
-                const gradio_gen_folder = path.dirname(audio_filepath)
-                const ttswebui_gen_folder = path.join(
-                    this.config.paths.basePath,
-                    result.data[result.data.length - 1]
-                )
+                    const gradio_gen_folder = path.dirname(audio_filepath)
+                    const ttswebui_gen_folder = path.join(
+                        this.config.paths.basePath,
+                        result.data[result.data.length - 1]
+                    )
 
-                this.speakStack.addTask(
-                    task(
-                        'speak',
-                        `${this.name}: speak`,
-                        async () => {
-                            await this.config.playSoundFunc(audio_filepath)
-                            if (this.config.autoCleanupOutput) {
-                                if (existsSync(gradio_gen_folder))
-                                    rm(gradio_gen_folder, { recursive: true, force: true })
-                                if (existsSync(ttswebui_gen_folder))
-                                    rm(ttswebui_gen_folder, { recursive: true, force: true })
+                    this.speakStack.addTask(
+                        task(
+                            'speak',
+                            `${this.name}: speak`,
+                            async () => {
+                                await this.config.playSoundFunc(audio_filepath)
+                                if (this.config.autoCleanupOutput) {
+                                    if (existsSync(gradio_gen_folder))
+                                        rm(gradio_gen_folder, { recursive: true, force: true })
+                                    if (existsSync(ttswebui_gen_folder))
+                                        rm(ttswebui_gen_folder, { recursive: true, force: true })
+                                }
                             }
-                        }
-                    ))
+                        ))
+                }
             }
+            if (this.shetUpNow)
+                this.speakStack.clearTasks()
+            this.shetUpNow = false
         } catch (err) {
             throw SpeakerError.fromErr('speak fail', err)
         }
