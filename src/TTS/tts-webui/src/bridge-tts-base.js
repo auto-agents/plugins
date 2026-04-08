@@ -107,7 +107,7 @@ export default class BridgeTTSBase {
                 }
             }
             if (this.shetUpNow)
-                this.speakStack.clearTasks()
+                await this.speakStack.clearTasks()
             this.shetUpNow = false
         } catch (err) {
             throw SpeakerError.fromErr('speak fail', err)
