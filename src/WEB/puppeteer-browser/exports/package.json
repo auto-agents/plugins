@@ -1,0 +1,20 @@
+{
+  "name": "puppeteer-browser",
+  "version": "1.0.0",
+  "description": "pupeteer browser plugin",
+  "keywords": [
+    "pupepeter",
+    "browser",
+    "plugin"
+  ],
+  "license": "ISC",
+  "author": "franck gaspoz",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "puppeteer-core": "^24.40.0"
+  }
+}
