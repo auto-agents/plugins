@@ -1,7 +1,9 @@
 import puppeteer from 'puppeteer'
+import { toJson } from './../../../../../../shared/src/utils/utils';
 
 export const PUPPETEER_PID = 'PUPPETEER_PID'
 export const PUPPETEER_WSE = 'PUPPETEER_WSE'
+export const PUPPETEER_ARGS = 'PUPPETEER_ARGS'
 
 export default class PuppeteerBrowserPlugin {
 
@@ -41,7 +43,7 @@ export default class PuppeteerBrowserPlugin {
 			browser: 'chrome',
 			headless: this.config.headless,
 			devtools: this.config.devtools,
-			dumpio: true
+			dumpio: false
 			//waitForInitialPage: true
 		})
 		const o = this.#o()
@@ -55,6 +57,7 @@ export default class PuppeteerBrowserPlugin {
 
 		s.vars.set(PUPPETEER_PID, pid)
 		s.vars.set(PUPPETEER_WSE, wse)
+		s.vars.set(PUPPETEER_ARGS, toJson(proc.spawnargs))
 	}
 
 	/**
