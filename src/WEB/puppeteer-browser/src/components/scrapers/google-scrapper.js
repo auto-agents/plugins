@@ -1,6 +1,6 @@
-export default class GoogleScraper {
+const querystring = require('node:querystring');
 
-    static querystring = require('node:querystring');
+export default class GoogleScraper {
 
     constructor(ctx, plugin, config) {
         this.ctx = ctx
@@ -13,10 +13,10 @@ export default class GoogleScraper {
         this.plugin = plugin
     }
 
-    run(query) {
-        query = query.replace(
+    async run(query) {
+        const url = this.config.queryUrl.replace(
             '{search_query}',
-            this.queryString.escape(query))
-        const page = this.plugin.open()
+            querystring.escape(query))
+        const page = await this.plugin.openPage(url)
     }
-} s
+} 
