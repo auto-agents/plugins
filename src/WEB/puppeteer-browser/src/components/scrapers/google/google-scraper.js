@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { toJson } from '../../../../../../../../shared/src/utils/utils';
+import { getSessionVars, toJson } from '../../../../../../../../shared/src/utils/utils';
 import ScraperError from '../ScraperError';
 //import puppeteer from 'puppeteer-core'
 
@@ -30,6 +30,9 @@ export default class GoogleScraper {
             .replaceAll('{excludeEmptyTopics}', this.config.excludeEmptyTopics)
             .replaceAll('{excludedResultUrls}', JSON.stringify(this.config.excludedResultUrls))
             .replaceAll('{skipResults}', this.config.skipResults)
+            .replaceAll('{CAPTCHA_BEFORE_HOME_PAGE}', CAPTCHA_BEFORE_HOME_PAGE)
+            .replaceAll('{CAPTCHA_BEFORE_RESULT_PAGE}', CAPTCHA_BEFORE_RESULT_PAGE)
+            .replaceAll('{RESULT_PAGE}', RESULT_PAGE)
     }
 
     #getScript(name, query) {
@@ -85,7 +88,8 @@ export default class GoogleScraper {
                 throw new ScraperError(m, r)
             }
 
-            o.appendLine('result: ' + toJson(r))
+            getSessionVars().set('search', r)
+            o.appendLine('success ✔️')
             return r
 
         } catch (err) {

@@ -5,7 +5,7 @@
     // 1. check captcha
 
     if (window.location.pathname == '{catchaPathName}')
-        return 'CAPTCHA_BEFORE_RESULT_PAGE'
+        return '{CAPTCHA_BEFORE_RESULT_PAGE}'
 
     // 2. parse result list
 
@@ -13,7 +13,6 @@
     var excludeEmptyTopics = '{excludeEmptyTopics}' == 'true'
     var skipResults = '{skipResults}'
     var excludedResultUrls = JSON.parse('{excludedResultUrls}')
-    console.log(excludedResultUrls)
 
     let isExcludedResultUrl = (href) => {
         var r = false

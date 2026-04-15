@@ -11,7 +11,7 @@
         }, ms);
     })
 
-    // 0. TEST CASE
+    // 0. setup
 
     let query = '{query}'
     let kdbDelay = '{minimumKbdDelay}'
@@ -20,7 +20,7 @@
     // 1. check if sorry captcha page
 
     if (window.location.pathname == '{catchaPathName}')
-        return 'CAPTCHA_BEFORE_HOME_PAGE'
+        return '{CAPTCHA_BEFORE_HOME_PAGE}'
 
     // 1. check if cookie consentement page
 
@@ -68,6 +68,6 @@
     pathname:"/sorry/index"
     */
 
-    return 'RESULT_PAGE'
+    return '{RESULT_PAGE}'
 
 })()
