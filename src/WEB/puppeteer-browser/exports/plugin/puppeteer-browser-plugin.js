@@ -1,5 +1,7 @@
 import puppeteer from 'puppeteer'
 import { toJson } from './../../../../../../shared/src/utils/utils';
+import { dirname, join } from 'path';
+import { existsSync } from 'fs';
 
 export const PUPPETEER_PID = 'PUPPETEER_PID'
 export const PUPPETEER_WSE = 'PUPPETEER_WSE'
@@ -9,8 +11,10 @@ export const PUPPETEER_CMD = 'PUPPETEER_CMD'
 export default class PuppeteerBrowserPlugin {
 
 	browser = null
-	pageId = 0
 	pages = {}
+	pageId = 0
+	scrapers = {}
+	scraperId = 0
 
 	constructor(ctx, config, outputContext, pluginSpec, overloadConfig = null) {
 		this.config = config
@@ -92,6 +96,8 @@ export default class PuppeteerBrowserPlugin {
 		})
 		if (url)
 			await page.goto(url)
+		if (this.config.focusOnOpenPage)
+			await page.bringToFront()
 		this.pages[id] = page
 		return { page: page, id: id }
 	}
@@ -109,7 +115,23 @@ export default class PuppeteerBrowserPlugin {
 	 * @param {String} browser browser id
 	 */
 	async search(query, browser) {
-
+		const bconf = this.config.scrappers[browser]
+		if (!bconf) throw new Error('browser config not found: ' + browser)
+		const path = join(dirname(this.specification.file),
+			this.config.paths.scrapers,
+			browser,
+			bconf.file)
+		if (!existsSync(path)) throw new Error('scraper file not found: ' + path)
+		const scraperMod = await import(path)
+		const scraper = new scraperMod.default(
+			this.ctx,
+			this,
+			this.config.scrappers.google,
+			this.outputContext
+		)
+		this.#o().appendLine('added scraper: ' + this.scraperId)
+		this.scrapers[this.scraperId++] = scraper
+		await scraper.run(query)
 	}
 
 	/**

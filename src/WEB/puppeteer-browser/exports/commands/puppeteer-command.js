@@ -38,6 +38,7 @@ export default class PupeteerCommand extends Command {
 					this.parameterMissing(argText)
 					return
 				}
+				o.newLine()
 				o.appendLine('launch browser search with: ' + id)
 				const r = await plugin.search(text, id)
 				break
@@ -48,6 +49,7 @@ export default class PupeteerCommand extends Command {
 					return
 				}
 
+				o.newLine()
 				o.appendLine('open browser at: ' + url)
 				const pageInfo = await plugin.openPage(url)
 				o.appendLine('done ✔️ page id = ' + pageInfo.id)
@@ -59,7 +61,8 @@ export default class PupeteerCommand extends Command {
 					this.parameterMissing(argId)
 					return
 				}
-				o.appendLine('close browser page #' + id)
+				o.newLine()
+				o.appendLine('close browser page: ' + id)
 				await plugin.closePage(id)
 				o.appendLine('done ✔️')
 				break

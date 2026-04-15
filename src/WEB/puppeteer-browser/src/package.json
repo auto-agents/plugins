@@ -1,5 +1,5 @@
 {
-  "name": "pupeteer-browser",
+  "name": "pupeteer-browser-src",
   "version": "1.0.0",
   "description": "pupeteer browser plugin",
   "keywords": [
@@ -7,7 +7,7 @@
     "browser",
     "plugin"
   ],
-  "license": "ISC",
+  "license": "GPL-3.0-or-later",
   "author": "franck gaspoz",
   "type": "commonjs",
   "main": "index.js",
@@ -15,6 +15,6 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "puppeteer-core": "^24.40.0"
+    "puppeteer-core": "^24.41.0"
   }
 }

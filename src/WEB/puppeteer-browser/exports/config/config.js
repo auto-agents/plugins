@@ -22,15 +22,25 @@ export default function config(ctx) {
 						width: 1200,
 						height: 1024
 					},
+					focusOnOpenPage: true,
+					paths: {
+						scrapers: '../../src/components/scrapers'	// related to plugin exports/plugin folder
+					},
 					scrappers: {
 						google: {
 							file: 'google-scraper.js',
-							queryUrl: 'https://www.google.com/search?q={search_query}',
+							queryUrl: 'https://www.google.com',	// /search?q={search_query}
 							scriptsPath: 'scripts',
 							scripts: {
-								runQuery: 'query-home-page.js'
+								runQuery: 'query-home-page.js',
+								scrapResults: 'parse-result-page.js'
 							},
-							minimumPauseDelay: 250
+							pathNames: {
+								captcha: '/sorry/index'
+							},
+							minimumPauseDelay: 250,
+							includeYouTubeResults: false,
+							excludeEmptyTopics: true
 						}
 					},
 					// when user lanuch a dev browser instance by his own
