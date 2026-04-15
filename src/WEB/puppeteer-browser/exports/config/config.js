@@ -24,29 +24,32 @@ export default function config(ctx) {
 					},
 					focusOnOpenPage: true,
 					paths: {
-						scrapers: '../../src/components/scrapers'	// related to plugin exports/plugin folder
+						plugins: '../../src/plugins',	// related to plugin exports/plugin folder
+						searchPlugins: 'search'			// related to plugins
 					},
-					scrappers: {
-						google: {
-							file: 'google-scraper.js',
-							queryUrl: 'https://www.google.com',	// /search?q={search_query}
-							scriptsPath: 'scripts',
-							scripts: {
-								runQuery: 'query-home-page.js',
-								scrapResults: 'parse-result-page.js'
-							},
-							pathNames: {
-								captcha: '/sorry/index'
-							},
-							minimumKbdDelay: 100,
-							minimumPauseDelay: 250,
-							includeYouTubeResults: false,
-							excludeEmptyTopics: true,
-							excludedResultUrls: [
-								'https://maps.google.com/maps?',
-								'https://www.google.com/travel/',
-							],
-							skipResults: 1
+					plugins: {
+						search: {
+							google: {
+								file: 'google-scraper.js',
+								queryUrl: 'https://www.google.com',	// /search?q={search_query}
+								scriptsPath: 'scripts',
+								scripts: {
+									runQuery: 'query-home-page.js',
+									scrapResults: 'parse-result-page.js'
+								},
+								pathNames: {
+									captcha: '/sorry/index'
+								},
+								minimumKbdDelay: 100,
+								minimumPauseDelay: 250,
+								includeYouTubeResults: false,
+								excludeEmptyTopics: true,
+								excludedResultUrls: [
+									'https://maps.google.com/maps?',
+									'https://www.google.com/travel/',
+								],
+								skipResults: 1
+							}
 						}
 					},
 					// when user lanuch a dev browser instance by his own

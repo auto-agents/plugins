@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { getSessionVars, toJson } from '../../../../../../../../shared/src/utils/utils';
-import ScraperError from '../ScraperError';
+import { getSessionVars } from '../../../../../../../../shared/src/utils/utils';
+import ScraperError from '../../../components/ScraperError';
 //import puppeteer from 'puppeteer-core'
 
 const querystring = require('node:querystring');

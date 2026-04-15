@@ -14,8 +14,8 @@ export default class PuppeteerBrowserPlugin {
 	browser = null
 	pages = {}
 	pageId = 0
-	scrapers = {}
-	scraperId = 0
+	plugins = {}
+	pluginId = 0
 
 	constructor(ctx, config, outputContext, pluginSpec, overloadConfig = null) {
 		this.config = config
@@ -121,35 +121,44 @@ export default class PuppeteerBrowserPlugin {
 		return
 	}
 
+	async #getPlugin(category, name, config) {
+		const path = join(dirname(this.specification.file),
+			this.config.paths.plugins,
+			category,
+			name,
+			config.file)
+		if (!existsSync(path)) throw new Error('plugin file not found: ' + path)
+		const pluginMod = await import(path)
+		const plugin = new pluginMod.default(
+			this.ctx,
+			this,
+			config,
+			this.outputContext
+		)
+		this.#o().appendLine('added plugin: ' + plugin + ' #' + this.pluginId)
+		const id = this.pluginId++
+		this.plugins[id] = plugin
+		plugin.id = id
+		return plugin
+	}
+
 	/**
 	 * perform a query using a scrapper
 	 * @param {String} query user query
 	 * @param {String} browser browser id
 	 * @param {Object} options specific actions options 
-	 * @param {number} scraperId id of an existing scraper
+	 * @param {number} pluginId id of an existing scraper
 	 */
-	async search(query, browser, options, scraperId) {
+	async search(query, plugin, options, pluginId) {
 
 		const o = this.outputContext.output
-		const bconf = this.config.scrappers[browser]
-		if (!bconf) throw new Error('browser config not found: ' + browser)
+		const config = this.config.plugins.search[plugin]
+		if (!config) throw new Error('browser config not found: ' + browser)
 
-		const path = join(dirname(this.specification.file),
-			this.config.paths.scrapers,
-			browser,
-			bconf.file)
-		if (!existsSync(path)) throw new Error('scraper file not found: ' + path)
-		const scraperMod = await import(path)
-		const scraper = new scraperMod.default(
-			this.ctx,
-			this,
-			this.config.scrappers.google,
-			this.outputContext
-		)
-		this.#o().appendLine('added scraper: ' + this.scraperId)
-		const id = this.scraperId++
-		this.scrapers[id] = scraper
-		scraper.id = id
+		const scraper = await this.#getPlugin(
+			this.config.paths.searchPlugins,
+			plugin,
+			config)
 
 		var result = null
 		try {
@@ -160,7 +169,7 @@ export default class PuppeteerBrowserPlugin {
 		}
 
 		return {
-			id: id,
+			id: scraper.id,
 			scraper: scraper,
 			result: result
 		}
