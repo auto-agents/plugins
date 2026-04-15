@@ -88,7 +88,7 @@ export default class GoogleScraper {
                 throw new ScraperError(m, r)
             }
 
-            getSessionVars().set('search', r)
+            getSessionVars(this.ctx).set('search', r)
             o.appendLine('success ✔️')
             return r
 
