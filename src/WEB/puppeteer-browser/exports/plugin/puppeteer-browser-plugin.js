@@ -2,7 +2,7 @@ import puppeteer from 'puppeteer'
 import { toJson } from './../../../../../../shared/src/utils/utils';
 import { dirname, join } from 'path';
 import { existsSync } from 'fs';
-import { errorEvent, LogErrorEvent, LogWarningEvent } from '../../../../../../shared/src/data/events';
+import { AppExitingEvent, errorEvent, LogErrorEvent, LogWarningEvent } from '../../../../../../shared/src/data/events';
 
 export const PUPPETEER_PID = 'PUPPETEER_PID'
 export const PUPPETEER_WSE = 'PUPPETEER_WSE'
@@ -23,6 +23,16 @@ export default class PuppeteerBrowserPlugin {
 		this.ctx = ctx
 		this.outputContext = outputContext
 		this.overloadConfig = overloadConfig
+
+		this.ctx.cli.onExiting.push(async () => await this.#exit())
+	}
+
+	async #exit() {
+		for (const [id, page] of Object.entries(this.pages)) {
+			this.#o().appendLine('closing page: ' + id)
+			await this.closePage(id)
+			this.#o().appendLine('done ✔️')
+		}
 	}
 
 	/**
