@@ -13,10 +13,18 @@ const RESULT_PAGE = 'RESULT_PAGE'
 
 export default class GoogleScraper {
 
+    // host plugin (puppeteer)
+    plugin = null
     // linked page
     page = null
     // last search results
     search = null
+    // browse plugin
+    browseTasks = {}
+
+    browseTask(id, pluginGetName, pluginGet) {
+        return { pluginGetName: pluginGetName, id: id, pluginGet: pluginGet }
+    }
 
     constructor(ctx, plugin, config, outputContext) {
         this.ctx = ctx
@@ -60,15 +68,47 @@ export default class GoogleScraper {
                 return await this.#search(query, usePage, options)
 
             case PUPPETEER_ACTION_GET:
-                return await this.#get(usePage, options)
+                return await this.#get(options)
 
             default:
                 throw new Error('invalid action: ' + options.action)
         }
     }
 
-    async #get(usePage, options) {
+    async #get(options) {
+        // get or build a single browse task
+        const task = this.#getBrowseTask(options)
+    }
 
+    #getBrowseTask(options) {
+        const o = this.outputContext.output
+        const t = Object.values(this.browseTasks)
+            .filter(x => x.pluginGetName == options.pluginGetName)
+        var task = null
+        if (t.length > 0) {
+            task = t[0]
+            o.appendLine('reuse get task "' + task.pluginGetName + '": #' + task.id)
+        }
+        else {
+            task = this.#getNewBrowseTask(options)
+            this.browseTasks[task.id] = task
+            o.appendLine('add new browser task "' + task.pluginGetName + '": #' + task.id)
+        }
+        return task
+    }
+
+    #getNewBrowseTask(options) {
+        var id = 0
+        const tasks = Object.values(this.browseTasks)
+        if (tasks.length > 0)
+            id = Math.max(...tasks.map(x => x.id)) + 1
+        const pluginGet = this.plugin.getPlugin(
+            this.plugin.config.paths.getPlugins,
+            options.pluginGetName,
+            this.plugin.config.plugins[this.plugin.config.paths.getPlugins][options.pluginGetName]
+        )
+        const task = this.browseTask(id, options.pluginGetName, pluginGet)
+        return task
     }
 
     async #search(query, usePage, options) {

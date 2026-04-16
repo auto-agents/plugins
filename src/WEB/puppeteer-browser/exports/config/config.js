@@ -25,7 +25,8 @@ export default function config(ctx) {
 					focusOnOpenPage: true,
 					paths: {
 						plugins: '../../src/plugins',	// related to plugin exports/plugin folder
-						searchPlugins: 'search'			// related to plugins
+						searchPlugins: 'search',		// related to plugins
+						getPlugins: 'get'				// related to plugins
 					},
 					dumpSearchResults: true,
 
@@ -35,6 +36,8 @@ export default function config(ctx) {
 								action: null,				// requested action: SEARCH | GET
 								browseSearchPages: [0],		// pages results to include in deep search
 								limitResults: 1,			// result per page to handle for deep search
+								pluginGetName: 'pageScraper',
+								reuseGetPlugin: true		// if true reuse already instanciated get plugins
 							},
 							google: {
 								file: 'google-scraper.js',
@@ -56,6 +59,11 @@ export default function config(ctx) {
 									'https://www.google.com/travel/',
 								],
 								skipResults: 1
+							}
+						},
+						get: {
+							pageScraper: {
+								file: 'page-scraper.js'
 							}
 						}
 					},

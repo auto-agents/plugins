@@ -134,7 +134,7 @@ export default class PuppeteerBrowserPlugin {
 		return
 	}
 
-	async #getPlugin(category, name, config, pluginId) {
+	async getPlugin(category, name, config, pluginId) {
 
 		var plugin = null
 		if (pluginId) {
@@ -185,7 +185,7 @@ export default class PuppeteerBrowserPlugin {
 		const o = this.outputContext.output
 		const config = this.config.plugins.search[pluginName]
 		if (!config) throw new Error('plugin config not found: ' + pluginName)
-		const plugin = await this.#getPlugin(
+		const plugin = await this.getPlugin(
 			this.config.paths.searchPlugins,
 			pluginName,
 			config,
