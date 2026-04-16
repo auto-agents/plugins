@@ -2,6 +2,23 @@
 
 (async () => {
 
+    let textContent = (node, f) => {
+        var r = ''
+        var childs = node.childNodes.values().toArray()
+        if (childs.length == 0) {
+            if (node.textContent && node.textContent.trim().length > 0)
+                return '\n' + node.textContent
+            return ''
+        }
+        childs.forEach(c => {
+            var sr = f(c, f)
+            r += f(c, f)
+        })
+        return r
+    }
+
+    let tc = node => textContent(node, textContent)
+
     // 1. check captcha
 
     if (window.location.pathname == '{catchaPathName}')
@@ -26,13 +43,16 @@
     let list = document.querySelectorAll('a[ping][data-ved]').values().toArray()
         .filter(x => x.id == '')
 
+    window.ch = []
+
     let results = list.map((x, i) => {
 
         const p = x.parentNode?.parentNode?.parentNode?.parentNode?.parentNode
-        const o = new Object({ index: i, topic: x.innerText, href: x.href, summary: '' })
+        const o = new Object({ index: i, topic: /*x.innerText*/tc(x), href: x.href, summary: '' })
         const childs = p.childNodes.values().toArray()
         if (p && childs.length >= 2) {
-            o.summary = childs[1].textContent
+            window.ch.push({ n: p, c: childs })
+            o.summary = tc(childs[1]) //.textContent
         }
         return o;
     })
@@ -43,6 +63,8 @@
     results = results.filter(x => !isExcludedResultUrl(x.href))
     if (skipResults > 0)
         results = results.splice(skipResults)
+
+    window.r = results
 
 
     let pagesList = document.querySelectorAll('a[aria-label] > span').values().toArray()
@@ -58,6 +80,7 @@
         let n = lst[0]
         if (n?.parentNode?.parentNode)
             aiContent = n.parentNode.parentNode.textContent
+        //aiContent = tc(n.parentNode.parentNode)
     }
 
     // "head" response
@@ -65,13 +88,15 @@
     let headResponse1 = ''
     lst = document.querySelectorAll('span[lang]').values().toArray()
     if (lst.length > 0) {
-        headResponse1 = lst[0].textContent
+        //headResponse1 = lst[0].textContent
+        headResponse1 = tc(lst[0])
     }
 
     let headResponse2 = ''
     lst = document.querySelectorAll('div[lang]').values().toArray()
     if (lst.length > 0) {
-        headResponse2 = lst[0].textContent
+        //headResponse2 = lst[0].textContent
+        headResponse2 = tc(lst[0])
     }
 
     let result = {
