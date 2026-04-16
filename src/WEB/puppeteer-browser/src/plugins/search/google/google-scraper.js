@@ -81,6 +81,8 @@ export default class GoogleScraper {
     }
 
     #getBrowseTask(options) {
+        if (!this.search) throw new Error('no search results available')
+
         const o = this.outputContext.output
         const t = Object.values(this.browseTasks)
             .filter(x => x.pluginGetName == options.pluginGetName)
@@ -92,7 +94,7 @@ export default class GoogleScraper {
         else {
             task = this.#getNewBrowseTask(options)
             this.browseTasks[task.id] = task
-            o.appendLine('add new browser task "' + task.pluginGetName + '": #' + task.id)
+            o.appendLine('add new get task "' + task.pluginGetName + '": #' + task.id)
         }
         return task
     }

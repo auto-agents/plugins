@@ -36,7 +36,7 @@ export default function config(ctx) {
 								action: null,				// requested action: SEARCH | GET
 								browseSearchPages: [0],		// pages results to include in deep search
 								limitResults: 1,			// result per page to handle for deep search
-								pluginGetName: 'pageScraper',
+								pluginGetName: 'page',
 								reuseGetPlugin: true		// if true reuse already instanciated get plugins
 							},
 							google: {
@@ -62,7 +62,7 @@ export default function config(ctx) {
 							}
 						},
 						get: {
-							pageScraper: {
+							page: {
 								file: 'page-scraper.js'
 							}
 						}
