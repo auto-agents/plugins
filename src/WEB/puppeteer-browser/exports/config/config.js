@@ -161,6 +161,12 @@ export default function config(ctx) {
 								required: false,
 								short: 'g',
 								description: 'follow any previous search results and produces a deep search result (opens and anylse the results pages). possibles values: list of pages numbers: 0,...,10 OR "all" OR "default"'
+							},
+							deep: {
+								type: 'boolean',
+								required: false,
+								short: 'd',
+								description: 'if combinated with search action, it enable the deep search after search engine use'
 							}
 						},
 						allowPositionals: true
