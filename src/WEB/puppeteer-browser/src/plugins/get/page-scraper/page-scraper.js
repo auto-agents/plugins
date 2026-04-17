@@ -9,13 +9,16 @@ export default class PageScraper extends PupeteerPlugin {
         super(ctx, plugin, config, outputContext)
     }
 
+    // TODO:: multiple page model, run(...) can have multiple // calls
     // linked page
-    pageInfo = null
+    pagesInfos = {}
+    pagesInfosByUrl = {}
 
     async run(url) {
         const o = this.outputContext.output
         const usePage = this.plugin.config.plugins.get.getOptions.reusePage
-            && this.page != null
+            && this.pagesInfosByUrl[url] != null
+
         o.appendLine('scrap page at: ' + url)
         try {
 
@@ -24,7 +27,7 @@ export default class PageScraper extends PupeteerPlugin {
             var pageInfo = null
             var page = null
             if (usePage) {
-                pageInfo = this.pageInfo
+                pageInfo = this.pagesInfosByUrl[url]
                 page = pageInfo.page
                 await page.bringToFront()
 
@@ -36,7 +39,9 @@ export default class PageScraper extends PupeteerPlugin {
                 o.appendLine(`page #${page.id} focused`)
             }
             else {
-                pageInfo = this.pageInfo = await this.plugin.openPage(url)
+                pageInfo = await this.plugin.openPage(url)
+                this.pagesInfos[pageInfo.id] = pageInfo
+                this.pagesInfosByUrl[url] = pageInfo
                 o.appendLine(`page ${pageInfo.id} opened`)
                 page = this.page = pageInfo.page
             }
