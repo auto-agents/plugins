@@ -9,7 +9,6 @@ export default class PageScraper extends PupeteerPlugin {
         super(ctx, plugin, config, outputContext)
     }
 
-    // TODO:: multiple page model, run(...) can have multiple // calls
     // linked page
     pagesInfos = {}
     pagesInfosByUrl = {}
