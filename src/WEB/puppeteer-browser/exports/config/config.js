@@ -167,6 +167,12 @@ export default function config(ctx) {
 								required: false,
 								short: 'd',
 								description: 'if combinated with search action, it enable the deep search after search engine use'
+							},
+							limit: {
+								type: 'string',
+								required: false,
+								short: 'l',
+								description: 'if combinated with deep search or get, indicates the max number of links of page results to follow. if zero limit is omitted'
 							}
 						},
 						allowPositionals: true

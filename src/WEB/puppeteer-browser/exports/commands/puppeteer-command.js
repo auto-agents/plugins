@@ -38,9 +38,12 @@ export default class PupeteerCommand extends Command {
 		const argDeep = 'deep'
 		const deep = this.getValue(com, args, argDeep)
 
+		const argLimit = 'limit'
+		const limit = this.getValue(com, args, argLimit)
+
 		var cr = null
 
-		const search = async (text, get, use) => {
+		const search = async (text, get, use, limit) => {
 			var opts = {
 				action: PUPPETEER_ACTION_SEARCH
 			}
@@ -63,6 +66,8 @@ export default class PupeteerCommand extends Command {
 						opts.browseSearchPages = get.split(',').map(x => eval(x))
 						break
 				}
+				if (limit != null && limit !== undefined)
+					opts.limitResults = limit
 			}
 			if (opts.action == PUPPETEER_ACTION_SEARCH && !text) {
 				this.parameterMissing(argText)
@@ -79,7 +84,7 @@ export default class PupeteerCommand extends Command {
 		switch (action) {
 
 			case 'search':
-				cr = await search(text, get, use)
+				cr = await search(text, get, use, limit)
 
 				if (!get && plugin.config.dumpSearchResults) {
 					const sr = cr?.searchResult
@@ -102,7 +107,7 @@ export default class PupeteerCommand extends Command {
 				}
 
 				if (deep)
-					search(null, get, use)
+					search(null, get, use, limit)
 				break
 
 			case 'open':

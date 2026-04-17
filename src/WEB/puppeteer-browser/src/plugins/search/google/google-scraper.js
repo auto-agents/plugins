@@ -96,9 +96,9 @@ export default class GoogleScraper extends PupeteerPlugin {
                         this.search[pageIndex].errors = []
                     results.forEach(item => {
                         if (item.href &&
-                            !options.limitResults
-                            || options.limitResults == 0
-                            || itemCount < options.limitResults) {
+                            (!options.limitResults
+                                || options.limitResults == 0
+                                || itemCount < options.limitResults)) {
                             const task = async (item) => {
 
                                 const n = item.index
