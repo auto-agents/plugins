@@ -61,6 +61,7 @@ export default class PageScraper extends PupeteerPlugin {
                             pageInfo = pageRecyclables[0]
                             page = pageInfo.page
                             await page.goto(url)
+                            await page.bringToFront()
                             page.owner = this
                             o.appendLine(`page #${page.id} loaded (recycled)`)
                         }
@@ -94,6 +95,7 @@ export default class PageScraper extends PupeteerPlugin {
 
                     // 2. scrap content
 
+                    await page.bringToFront()
                     const scrapContentScript = this.#getScript(this.config.scripts.scrapContent)
                     const res = await page.evaluate(scrapContentScript)
 

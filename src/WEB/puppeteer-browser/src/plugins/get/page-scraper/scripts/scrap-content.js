@@ -11,7 +11,8 @@
     let textContent = (node, f) => {
         var r = ''
         var childs = node.childNodes.values().toArray()
-        if (childs.length == 0) {
+        if (childs.length == 0
+            && (node.tagName != 'script' && node.tagName != 'style')) {
             if (node.textContent && node.textContent.trim().length > 0)
                 return '\n' + node.textContent
             return ''
@@ -56,16 +57,16 @@
 
     r.links = document.querySelectorAll('a').values().toArray()
         .map(x => new Object({ text: tc(x), href: x.href }))
-        .filter(x => x.href != null && x.href !== undefined
-            && x.href.trim().length > 0
+        .filter(x => x != null && x.href != null && x.href !== undefined
+            && x.href?.trim()?.length > 0
         )
 
     // 2. links - buttons
 
     r.buttons = document.querySelectorAll('button').values().toArray()
         .map(x => new Object({ id: x.id, name: x.name, type: x.type, text: tc(x) }))
-        .filter(x => x.text != null && x.text !== undefined
-            && x.text.trim().length > 0
+        .filter(x => x != null && x.text != null && x.text !== undefined
+            && x.text?.trim()?.length > 0
         )
 
     // 3. input
