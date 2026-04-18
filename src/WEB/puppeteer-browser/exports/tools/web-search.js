@@ -9,15 +9,18 @@ export default class WebSearchTool extends AITool {
     specification() {
         return {
             name: 'web_search',
-            description: 'search on internet using an online search engine',
+            description: 'search information on internet using an online search engine',
             parameters: {
                 type: "object",
                 properties: {
                     "query": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "the query to provide to the search engine"
                     },
                     "engine": {
+                        "description": "the search engine that must be used",
                         "type": "string",
+                        "enum": ["google"],
                         "default": "google"
                     }
                 }

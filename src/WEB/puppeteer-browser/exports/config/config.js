@@ -181,10 +181,9 @@ export default function config(ctx) {
 				}
 			]
 		},
-		tools: {
-			webSearch: {
-				file: 'web-search-tool.js'
-			}
-		}
+		tools: [
+			{
+				file: 'web-search.js'
+			}]
 	}
 }
