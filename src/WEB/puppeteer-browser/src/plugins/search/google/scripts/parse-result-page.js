@@ -6,12 +6,15 @@
         var r = ''
         var childs = node.childNodes.values().toArray()
         if (childs.length == 0) {
-            if (node.textContent && node.textContent.trim().length > 0)
+            if (node.nodeType == 3 && node.textContent && node.textContent.trim().length > 0)
                 return '\n' + node.textContent
             return ''
         }
         childs.forEach(c => {
-            r += f(c, f)
+            if (c.tagName != 'SCRIPT' && c.tagName != 'STYLE'
+                && c.tagName != 'script' && c.tagName != 'style'
+            )
+                r += f(c, f)
         })
         return r
     }

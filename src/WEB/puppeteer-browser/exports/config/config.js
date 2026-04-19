@@ -52,7 +52,7 @@ export default function config(ctx) {
 								},
 								minimumKbdDelay: 100,
 								minimumPauseDelay: 250,
-								includeYouTubeResults: false,
+								includeYouTubeResults: true,
 								excludeEmptyTopics: true,
 								excludedResultUrls: [
 									'https://maps.google.com/maps?',

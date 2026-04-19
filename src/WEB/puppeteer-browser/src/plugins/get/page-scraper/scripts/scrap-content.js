@@ -12,12 +12,14 @@
         var r = ''
         var childs = node.childNodes.values().toArray()
         if (childs.length == 0) {
-            if (node.textContent && node.textContent.trim().length > 0)
+            if (node.nodeType == 3 && node.textContent && node.textContent.trim().length > 0)
                 return '\n' + node.textContent
             return ''
         }
         childs.forEach(c => {
-            if (c.tagName != 'SCRIPT' && c.tagName != 'STYLE')
+            if (c.tagName != 'SCRIPT' && c.tagName != 'STYLE'
+                && c.tagName != 'script' && c.tagName != 'style'
+            )
                 r += f(c, f)
         })
         return r
@@ -58,6 +60,7 @@
     r.links = document.querySelectorAll('a').values().toArray()
         .map(x => new Object({ text: tc(x), href: x.href }))
         .filter(x => x != null && x.href != null && x.href !== undefined
+            && String(x.href).length > 0
         )
 
     // 2. links - buttons
@@ -65,6 +68,7 @@
     r.buttons = document.querySelectorAll('button').values().toArray()
         .map(x => new Object({ id: x.id, name: x.name, type: x.type, text: tc(x) }))
         .filter(x => x != null && x.text != null && x.text !== undefined
+            && String(x.href).length > 0
         )
 
     // 3. input
@@ -108,6 +112,7 @@
             r.metas[m.attributes[i].name] = m.attributes[i].value
     })
 
+    console.log(r)
     return r
 
 })()
