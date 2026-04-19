@@ -1,6 +1,7 @@
 import AITool from "../../../../../../shared/src/components/ai-tools/ai-tool"
 import Logger from "../../../../../../shared/src/components/sys/logger"
 import { cmd, mdBlockJson, nonEmpty, toJson } from "../../../../../../shared/src/utils/utils"
+import { writeFileSync } from 'fs';
 
 export default class WebSearchTool extends AITool {
 
@@ -62,9 +63,21 @@ export default class WebSearchTool extends AITool {
         var jsonResult = false
 
         var instruct = '# ' + query + '\n\n'
+        var doc = instruct
+
         instruct +=
             'This is the content of the web pages returned from the search engine, as a json object, for the query: **' + query + '**.\n'
             + 'Each page content is described in the property `query_results.pages[pageId]`, with the schema: `{url,title,lang,text}`' + '.\n'
+            + 'Extract the most relevant texts related to the query from the properties `text` and `summary`' + '.\n'
+            + 'Respond with a summary of maximum 10 lines.\n'
+            + "If you don't find any relevant information in the provided results, just indicates it, do not performs another search.\n"
+            + '\n'
+
+        doc +=
+            'This is the content of the web pages returned from the search engine, for the query: **"' + query + '"**.\n'
+            + 'Each page content is described by a section starting by a markdown title.`##`:\n'
+            + '- Above the title a bullet list indicates document properties: \n\t- url,\n\t- title\n\t- lang\n\t- id' + '\n'
+            + '- Above the document properties after a line break is the location of the text of the document'
             + 'Extract the most relevant texts related to the query from the properties `text` and `summary`' + '.\n'
             + 'Respond with a summary of maximum 10 lines.\n'
             + "If you don't find any relevant information in the provided results, just indicates it, do not performs another search.\n"
@@ -76,27 +89,44 @@ export default class WebSearchTool extends AITool {
             }
         }
 
+        var doc = '# Search results\n\n'
+
         for (const [pageNumber, sp] of Object.entries(res.searchResult)) {
 
             var hasContent = false
 
+            doc += '## results n°' + pageNumber + ' \n\n'
+            if (dat.query_results.summary) {
+                doc += '## summary: \n\n' + dat.query_results.summary + '\n\n'
+            }
+
             for (const [linkNumber, cp] of Object.entries(sp.content)) {
 
                 var txt = ''
-                if (cp?.content?.sections)
+                /*if (cp?.content?.sections)
                     for (const [secKey, sec] of Object.entries(cp.content.sections))
-                        txt += sec + '\n\n'
+                        txt += sec + '\n\n'*/
+                txt = cp?.content?.text
 
                 hasContent = nonEmpty(txt)
 
                 if (hasContent) {
+                    const id = pageNumber + '-' + linkNumber
                     dat.query_results.pages.push({
                         url: cp?.url,
                         title: cp?.content?.title,
                         lang: cp?.content?.lang,
                         text: txt,
-                        id: pageNumber + '-' + linkNumber
+                        id: id
                     })
+
+                    doc += '## ' + cp?.content?.title + '\n\n'
+                    doc += `- url: [${cp?.url}](${cp?.url})\n`
+                    doc += `- lang: ${cp?.content?.lang}\n`
+                    doc += `- id: ${id}\n`
+                    doc += '\n\n'
+                    doc += txt
+
                     this.ctx.components.output.appendLine('add link result: sp #' + pageNumber + ', link #' + linkNumber + ', length=' + txt.length)
                 }
             }
@@ -119,7 +149,9 @@ export default class WebSearchTool extends AITool {
 
         const trt = instruct + mdBlockJson(toJson(dat))
         const rt = this.textResult(trt)
-        //Logger.log(trt)
+        writeFileSync('tmp/search.md', doc)
+        writeFileSync('tmp/search-json.md', trt)
+        //const rt = this.textResult(doc)
         return rt
     }
 }
