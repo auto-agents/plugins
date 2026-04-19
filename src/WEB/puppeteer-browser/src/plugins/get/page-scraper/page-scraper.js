@@ -1,7 +1,5 @@
-import { join } from "node:path"
 import PupeteerPlugin from "../../../components/puppeteer-plugin"
 import ScraperError from "../../../components/ScraperError"
-import { readFileSync } from "node:fs"
 import { Mutex } from 'async-mutex';
 import { wait } from "../../../../../../../../shared/src/utils/utils";
 
@@ -11,7 +9,7 @@ export default class PageScraper extends PupeteerPlugin {
     static scrapMutex = new Mutex()
 
     constructor(ctx, plugin, config, outputContext) {
-        super(ctx, plugin, config, outputContext)
+        super(ctx, plugin, config, outputContext, __dirname)
     }
 
     // linked page (shared throught scrapers)
@@ -123,15 +121,9 @@ export default class PageScraper extends PupeteerPlugin {
     }
 
     #getScript(name) {
-        const scriptsPath = join(
-            __dirname,
-            this.config.scriptsPath
-        )
-        const runQueryScript = this.#configScript(
-            readFileSync(
-                join(scriptsPath, name)
-            ).toString())
-        return runQueryScript
+        return super.getScriptWithTransform(
+            name,
+            x => this.#configScript(x))
     }
 
     #configScript(script) {

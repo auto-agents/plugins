@@ -1,5 +1,3 @@
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
 import { getSessionVars } from '../../../../../../../../shared/src/utils/utils';
 import ScraperError from '../../../components/ScraperError';
 import { PUPPETEER_ACTION_GET, PUPPETEER_ACTION_SEARCH } from '../../../../exports/plugin/puppeteer-browser-plugin';
@@ -29,7 +27,7 @@ export default class GoogleScraper extends PupeteerPlugin {
     }
 
     constructor(ctx, plugin, config, outputContext) {
-        super(ctx, plugin, config, outputContext)
+        super(ctx, plugin, config, outputContext, __dirname)
         this.status = new Status(ctx)
     }
 
@@ -50,15 +48,9 @@ export default class GoogleScraper extends PupeteerPlugin {
     }
 
     #getScript(name, query) {
-        const scriptsPath = join(
-            __dirname,
-            this.config.scriptsPath
-        )
-        const runQueryScript = this.#configScript(
-            readFileSync(
-                join(scriptsPath, name)
-            ).toString(), query)
-        return runQueryScript
+        return super.getScriptWithTransform(
+            name,
+            x => this.#configScript(x, query))
     }
 
     async run(query, usePage, options) {
@@ -189,10 +181,12 @@ export default class GoogleScraper extends PupeteerPlugin {
                 page = this.page
                 await page.bringToFront()
                 await page.goto(url)
+                await super.importScripts(page)
                 o.appendLine(`page #${page.id} focused`)
             }
             else {
                 const pageInfo = this.pageInfo = await this.plugin.openPage(url)
+                await super.importScripts(pageInfo.page)
                 o.appendLine(`page #${pageInfo.id} opened`)
                 page = this.page = pageInfo.page
             }
@@ -219,6 +213,7 @@ export default class GoogleScraper extends PupeteerPlugin {
             // 3 . scrap results
 
             const scrapResultsScript = this.#getScript(this.config.scripts.scrapResults, null)
+            await super.importScripts(page)
             r = await page.evaluate(scrapResultsScript)
 
             if (typeof r === 'string') {

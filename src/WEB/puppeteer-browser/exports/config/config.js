@@ -24,9 +24,10 @@ export default function config(ctx) {
 					},
 					focusOnOpenPage: true,
 					paths: {
-						plugins: '../../src/plugins',	// related to plugin exports/plugin folder
-						searchPlugins: 'search',		// related to plugins
-						getPlugins: 'get'				// related to plugins
+						plugins: '../../src/plugins',		// related to plugin exports/plugin folder
+						searchPlugins: 'search',			// related to plugins
+						getPlugins: 'get',					// related to plugins
+						scripts: '../../src/scripts'		// related to plugin exports/plugin folder
 					},
 					dumpSearchResults: true,
 
@@ -43,6 +44,9 @@ export default function config(ctx) {
 								file: 'google-scraper.js',
 								queryUrl: 'https://www.google.com',	// /search?q={search_query}
 								scriptsPath: 'scripts',
+								imports: [
+									'utils.js'
+								],
 								scripts: {
 									runQuery: 'query-home-page.js',
 									scrapResults: 'parse-result-page.js'
@@ -75,6 +79,10 @@ export default function config(ctx) {
 								scripts: {
 									scrapContent: 'scrap-content.js'
 								},
+								imports: [
+								import { puppeteer } from 'puppeteer-core';
+								'utils.js'
+								]
 							}
 						}
 					},

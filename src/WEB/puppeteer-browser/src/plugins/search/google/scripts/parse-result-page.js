@@ -21,6 +21,8 @@
 
     let tc = node => textContent(node, textContent)?.trim()
 
+    console.log('parse result page')
+
     // 1. check captcha
 
     if (window.location.pathname == '{catchaPathName}')
