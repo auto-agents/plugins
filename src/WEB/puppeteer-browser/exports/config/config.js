@@ -64,6 +64,7 @@ export default function config(ctx) {
 								excludedResultUrls: [
 									'https://maps.google.com/maps?',
 									'https://www.google.com/travel/',
+									'https://translate.google.com/translate?'
 								],
 								skipResults: 1
 							}
