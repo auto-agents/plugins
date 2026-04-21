@@ -151,7 +151,8 @@ export default class WebSearchTool extends AITool {
 						doc += `\t- ${vid.url}\n`
 					});
 
-					this.ctx.components.output.appendLine('add link result: sp #' + pageNumber + ', link #' + linkNumber + ', length=' + txt.length)
+					this.ctx.components.output.appendLine(
+						'add link result: sp #' + pageNumber + ', link #' + linkNumber + ', size=' + txt.length)
 				}
 			}
 

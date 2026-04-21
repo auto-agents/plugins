@@ -31,7 +31,7 @@ export default function config(ctx) {
 					},
 					dumpSearchResults: true,
 					vars: {
-						['PLUGIN_NAME']: 'puppeteer'
+						['PLUGIN_NAME']: 'puppeteer plugin'
 					},
 
 					plugins: {
@@ -111,8 +111,8 @@ export default function config(ctx) {
 							"--enable-features=PdfOopif", "--auto-open-devtools-for-tabs", "--disable-extensions", "about:blank",
 							"--remote-debugging-port=0", "--user-data-dir=C:\\Users\\franc\\AppData\\Local\Temp\\puppeteer_dev_chrome_profile-yAI6Yw"
 						],
-						line: '"C:<\\Program Files\\Google\\Chrome\\Application\\chrome.exe" --allow-pre-commit-input --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-crash-reporter --disable-default-apps --disable-dev-shm-usage --disable-hang-monitor --disable-infobars --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-search-engine-choice-screen --disable-sync --enable-automation --export-tagged-pdf --force-color-profile=srgb --generate-pdf-document-outline --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --disable-features=Translate,AcceptCHFrame,MediaRouter,OptimizationHints,RenderDocument,PartitionAllocSchedulerLoopQuarantineTaskControlledPurge,ProcessPerSiteUpToMainFrameThreshold,IsolateSandboxedIframes --enable-features=PdfOopif --auto-open-devtools-for-tabs --disable-extensions about:blank --remote-debugging-port=0 --user-data-dir=C:\\Users\\franc\\AppData\\Local\\Temp\\puppeteer_dev_chrome_profile-yAI6Yw',
-						wse: 'ws://127.0.0.1:2930/devtools/browser/66a06581-c5cf-4c1d-9187-db67a9e7e48d'
+						line: '"C:<\\Program Files\\Google\\Chrome\\Application\\chrome.exe" --allow-pre-commit-input --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-crash-reporter --disable-default-apps --disable-dev-shm-usage --disable-hang-monitor --disable-infobars --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-search-engine-choice-screen --disable-sync --enable-automation --export-tagged-pdf --force-color-profile=srgb --generate-pdf-document-outline --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --disable-features=Translate,AcceptCHFrame,MediaRouter,OptimizationHints,RenderDocument,PartitionAllocSchedulerLoopQuarantineTaskControlledPurge,ProcessPerSiteUpToMainFrameThreshold,IsolateSandboxedIframes --enable-features=PdfOopif --auto-open-devtools-for-tabs --disable-extensions about:blank --remote-debugging-port=0 --user-data-dir=C:\\Users\\franc\\AppData\\Local\\Temp\\puppeteer_dev_chrome_profile-1roQRK',
+						wse: 'ws://127.0.0.1:24902/devtools/browser/9a746054-7ce9-4f7f-9dff-c7f394f73a02'
 					}
 				}
 			}
