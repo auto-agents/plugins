@@ -1,6 +1,7 @@
 import Command from '../../../../../../shared/src/commands/command.js';
 import chalk from 'chalk'
 import { PUPPETEER_ACTION_GET, PUPPETEER_ACTION_SEARCH, PUPPETEER_GET_ALL, PUPPETEER_GET_DEFAULT } from '../plugin/puppeteer-browser-plugin.js';
+import { output } from '../../../../../../shared/src/utils/utils.js';
 
 export default class PupeteerCommand extends Command {
 
@@ -8,7 +9,7 @@ export default class PupeteerCommand extends Command {
 		super(ctx, 'puppeteer com')
 	}
 
-	async run(args, com) {
+	async run(args, com, _, dialogContext) {
 		const o = this.ctx.components.output
 		const plugin = this.ctx.components.plugin.puppeteerBrowser
 
@@ -74,10 +75,10 @@ export default class PupeteerCommand extends Command {
 				return
 			}
 
-			o.newLine()
-			o.appendLine('launch browser action: ' + opts.action + ' with: ' + id +
+			output(dialogContext, '\nlaunch browser action: ' + opts.action + ' with: ' + id +
 				(use ? (', plugin #' + use) : ''))
-			cr = await plugin.search(text, id, use, opts)
+
+			cr = await plugin.search(dialogContext, text, id, use, opts)
 			return cr
 		}
 
@@ -91,17 +92,16 @@ export default class PupeteerCommand extends Command {
 					if (sr?.results && sr.results.length > 0) {
 						var n = 1
 						if (sr?.aiContent && sr.aiContent.length > 0) {
-							o.newLine()
-							o.appendLine(chalk.hex(plugin.config.theme.resultItemSummary)(sr.aiContent.trim()))
+							output(dialogContext, '\n' + chalk.hex(plugin.config.theme.resultItemSummary)(sr.aiContent.trim()))
 						}
-						o.newLine()
+						output(dialogContext, '\n')
 						sr.results.forEach(item => {
 							if (item.topic && item.topic.length > 0)
-								o.appendLine(
+								output(dialogContext,
 									chalk.hex(plugin.config.theme.resultItemNumber)((n++) + '. ')
 									+ chalk.hex(plugin.config.theme.resultItemTopic)(item.topic.trim()) + '\n')
 							if (item.summary && item.summary.length > 0)
-								o.appendLine(chalk.hex(plugin.config.theme.resultItemSummary)(item.summary.trim()) + '\n')
+								output(dialogContext, chalk.hex(plugin.config.theme.resultItemSummary)(item.summary.trim()) + '\n')
 						});
 					}
 				}
@@ -118,10 +118,9 @@ export default class PupeteerCommand extends Command {
 					return
 				}
 
-				o.newLine()
-				o.appendLine('open browser at: ' + url)
+				output(dialogContext, '\nopen browser at: ' + url)
 				const pageInfo = await plugin.openPage(url)
-				o.appendLine('done ✔️ page id = ' + pageInfo.id)
+				output(dialogContext, 'done ✔️ page id = ' + pageInfo.id)
 				await pageInfo.page.evaluate('console.log("' + plugin.pluginName + ': page id #' + pageInfo.id + '")')
 				cr = pageInfo
 				break
@@ -131,10 +130,9 @@ export default class PupeteerCommand extends Command {
 					this.parameterMissing(argId)
 					return
 				}
-				o.newLine()
-				o.appendLine('close browser page: ' + id)
+				output(dialogContext, '\nclose browser page: ' + id)
 				await plugin.closePage(id)
-				o.appendLine('done ✔️')
+				output(dialogContext, 'done ✔️')
 				break
 
 			default:

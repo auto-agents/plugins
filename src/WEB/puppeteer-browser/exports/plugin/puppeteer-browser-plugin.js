@@ -168,12 +168,13 @@ export default class PuppeteerBrowserPlugin {
 
 	/**
 	 * perform a query using a scrapper
+	 * @param {DialogContext} dcx dialogContext
 	 * @param {String} query user query
 	 * @param {String} pluginName plugin name
 	 * @param {number} pluginId id of an existing scraper
 	 * @param {Object} options specific actions options 
 	 */
-	async search(query, pluginName, pluginId, options) {
+	async search(dcx, query, pluginName, pluginId, options) {
 
 		var opts = this.config.plugins.search.searchOptions
 		if (options)
@@ -193,7 +194,7 @@ export default class PuppeteerBrowserPlugin {
 
 		var result = null
 		try {
-			result = await plugin.run(query, plugin.page, opts)
+			result = await plugin.run(dcx, query, plugin.page, opts)
 		}
 		catch (err) {
 			this.#err(err)

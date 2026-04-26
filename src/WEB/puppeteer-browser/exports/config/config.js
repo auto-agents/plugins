@@ -39,7 +39,7 @@ export default function config(ctx) {
 							searchOptions: {
 								action: null,				// requested action: SEARCH | GET
 								browseSearchPages: [1],		// pages results to include in deep search
-								limitResults: 5,			// result per page to handle for deep search
+								limitResults: 3,			// result per page to handle for deep search
 								pluginGetName: 'page-scraper',
 								reuseGetPlugin: true		// if true reuse already instanciated get plugins
 							},

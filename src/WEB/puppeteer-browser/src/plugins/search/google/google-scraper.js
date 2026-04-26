@@ -1,4 +1,4 @@
-import { getSessionVars } from '../../../../../../../../shared/src/utils/utils';
+import { getSessionVars, output } from '../../../../../../../../shared/src/utils/utils';
 import ScraperError from '../../../components/ScraperError';
 import { PUPPETEER_ACTION_GET, PUPPETEER_ACTION_SEARCH } from '../../../../exports/plugin/puppeteer-browser-plugin';
 import Status from '../../../../../../../../shared/src/utils/status';
@@ -53,21 +53,21 @@ export default class GoogleScraper extends PupeteerPlugin {
             x => this.#configScript(x, query))
     }
 
-    async run(query, usePage, options) {
+    async run(dcx, query, usePage, options) {
 
         switch (options.action) {
             case PUPPETEER_ACTION_SEARCH:
-                return await this.#search(query, usePage, options)
+                return await this.#search(dcx, query, usePage, options)
 
             case PUPPETEER_ACTION_GET:
-                return await this.#get(options)
+                return await this.#get(dcx, options)
 
             default:
                 throw new Error('invalid action: ' + options.action)
         }
     }
 
-    async #get(options) {
+    async #get(dcx, options) {
         // get or build a single browse task
         const o = this.outputContext.output
         const getTask = await this.#getGetPlugin(options)
@@ -95,12 +95,12 @@ export default class GoogleScraper extends PupeteerPlugin {
 
                                 const n = item.index
                                 try {
-                                    const pageInfo = await getTask.pluginGet.run(item.href)
+                                    const pageInfo = await getTask.pluginGet.run(dcx, item.href)
                                     pageInfos[n] = { ...pageInfo }
                                     // release page (tab)
                                     pageInfo.owner = null
                                 } catch (err) {
-                                    o.appendLine(this.status.error('scrap link #' + n + ' failed: ' + err.message))
+                                    output(dcx, this.status.error('scrap link #' + n + ' failed: ' + err.message))
                                     errors.push({
                                         link: n,
                                         message: err.message
@@ -114,7 +114,7 @@ export default class GoogleScraper extends PupeteerPlugin {
                     })
                     await Promise.all(tasks)
 
-                    o.appendLine('get done ✔️')
+                    output(dcx, 'get done ✔️')
                     this.scraps = pageInfos
                     this.search[pageIndex].content = { ...this.scraps }
                     this.search[pageIndex].errors = errors
@@ -122,7 +122,7 @@ export default class GoogleScraper extends PupeteerPlugin {
                 pagesTasks.push(pageTask())
 
             } else
-                o.appendLine(this.status.warning('page not available: #' + pageIndex))
+                output(dcx, this.status.warning('page not available: #' + pageIndex))
         });
 
         await Promise.all(pagesTasks)
@@ -162,10 +162,10 @@ export default class GoogleScraper extends PupeteerPlugin {
         return task
     }
 
-    async #search(query, usePage, options) {
+    async #search(dcx, query, usePage, options) {
         try {
             const pageIndex = 1
-            const o = this.outputContext.output
+            //const o = this.outputContext.output
             const url = this.config.queryUrl.replace(
                 '{search_query}',
                 querystring.escape(query))
@@ -174,26 +174,25 @@ export default class GoogleScraper extends PupeteerPlugin {
 
             // 1. open the search home page
 
-            o.newLine()
-            o.appendLine('1. open page at url: ' + url)
+            output(dcx, '\n1. open page at url: ' + url)
             var page = null
             if (usePage) {
                 page = this.page
                 await page.bringToFront()
                 await page.goto(url)
                 await super.importScripts(page)
-                o.appendLine(`page #${page.id} focused`)
+                output(dcx, `page #${page.id} focused`)
             }
             else {
                 const pageInfo = this.pageInfo = await this.plugin.openPage(url)
                 await super.importScripts(pageInfo.page)
-                o.appendLine(`page #${pageInfo.id} opened`)
+                output(dcx, `page #${pageInfo.id} opened`)
                 page = this.page = pageInfo.page
             }
 
             // 2. launch the search query
 
-            o.appendLine('2. run query')
+            output(dcx, '2. run query')
             const runQueryScript = this.#getScript(this.config.scripts.runQuery, query)
             var r = null
 
@@ -208,7 +207,7 @@ export default class GoogleScraper extends PupeteerPlugin {
                 throw new ScraperError(m, r)
             }
             else
-                o.appendLine(r)
+                output(dcx, r)
 
             // 3 . scrap results
 
@@ -224,7 +223,7 @@ export default class GoogleScraper extends PupeteerPlugin {
             r.query = query
             r = { [pageIndex]: r }
             getSessionVars(this.ctx).set('search', r)
-            o.appendLine('success ✔️')
+            output(dcx, 'success ✔️')
 
             this.search = r
             return r

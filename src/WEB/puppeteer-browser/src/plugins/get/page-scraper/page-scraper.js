@@ -1,7 +1,7 @@
 import PupeteerPlugin from "../../../components/puppeteer-plugin"
 import ScraperError from "../../../components/ScraperError"
 import { Mutex } from 'async-mutex';
-import { wait } from "../../../../../../../../shared/src/utils/utils";
+import { output, wait } from "../../../../../../../../shared/src/utils/utils";
 
 export default class PageScraper extends PupeteerPlugin {
 
@@ -16,9 +16,9 @@ export default class PageScraper extends PupeteerPlugin {
     static pagesInfos = {}
     static pagesInfosByUrl = {}
 
-    async run(url) {
+    async run(dcx, url) {
         const o = this.outputContext.output
-        o.appendLine('scrap page at: ' + url)
+        output(dcx, 'scrap page at: ' + url)
 
         // 1. open the page
 
@@ -47,9 +47,9 @@ export default class PageScraper extends PupeteerPlugin {
 
                         pageInfo = pageByUrl
                         page = pageInfo.page
-                        o.appendLine(`page #${page.id}: skip load (reuse existing url)`)
+                        output(dcx, `page #${page.id}: skip load (reuse existing url)`)
                         await page.bringToFront()
-                        o.appendLine(`page #${page.id} focused`)
+                        output(dcx, `page #${page.id} focused`)
                     }
                     else {
                         if (pageRecyclableAvailable) {
@@ -62,7 +62,7 @@ export default class PageScraper extends PupeteerPlugin {
                             await super.importScripts(page)
                             await page.bringToFront()
                             page.owner = this
-                            o.appendLine(`page #${page.id} loaded (recycled)`)
+                            output(dcx, `page #${page.id} loaded (recycled)`)
                         }
                     }
 
@@ -78,14 +78,14 @@ export default class PageScraper extends PupeteerPlugin {
                 if (!pageInfo) {
                     if (openNewTab) {
                         // add a new page
-                        o.appendLine(`opening page (tabs=${PageScraper.tabsCount})`)
+                        output(dcx, `opening page (tabs=${PageScraper.tabsCount})`)
                         pageInfo = await this.plugin.openPage(url)
                         await super.importScripts(pageInfo.page)
                         pageInfo.owner = this
                         await PageScraper.scrapMutex.runExclusive(async () => {
                             PageScraper.pagesInfos[pageInfo.id] = pageInfo
                             PageScraper.pagesInfosByUrl[url] = pageInfo
-                            o.appendLine(`page ${pageInfo.id} opened (tabs=${PageScraper.tabsCount})`)
+                            output(dcx, `page ${pageInfo.id} opened (tabs=${PageScraper.tabsCount})`)
                         })
                         page = pageInfo.page
                     }
@@ -100,13 +100,13 @@ export default class PageScraper extends PupeteerPlugin {
                     const res = await page.evaluate(scrapContentScript)
 
                     pageInfo.content = res
-                    o.appendLine('page ' + pageInfo.id + ' done ✔️')
+                    output(dcx, 'page ' + pageInfo.id + ' done ✔️')
                     return pageInfo
                 }
 
                 // no page available yet
                 if (!differed) {
-                    o.appendLine('differ scrap...')
+                    output(dcx, 'differ scrap...')
                     differed = true
                 }
                 await wait(this.plugin.config.plugins.get.getOptions.differDelay)

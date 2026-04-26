@@ -1,6 +1,6 @@
 import AITool from "../../../../../../shared/src/components/ai-tools/ai-tool"
 import Logger from "../../../../../../shared/src/components/sys/logger"
-import { cmd, mdBlockJson, nonEmpty, toJson } from "../../../../../../shared/src/utils/utils"
+import { cmd, mdBlockJson, nonEmpty, output, toJson } from "../../../../../../shared/src/utils/utils"
 import { writeFileSync } from 'fs';
 
 export default class WebSearchTool extends AITool {
@@ -32,14 +32,15 @@ export default class WebSearchTool extends AITool {
 		}
 	}
 
-	async run(args) {
+	async run(args, dialogContext) {
 		const id = args.engine || 'google'
 		var query = args.query
 		const o = this.ctx.components.output
 
 		// /pup search {id} {query} -g default -d
 		query = query.replaceAll('"', '')
-		const res = await cmd(this.ctx,
+		const res = await cmd(
+			dialogContext,
 			'puppeteer', 'search', id,
 			'"' + query + '"', '-g', 'default', '-d')
 
@@ -65,26 +66,30 @@ export default class WebSearchTool extends AITool {
 		var instruct = '# ' + query + '\n\n'
 		var doc = instruct
 
+		// instructs in results is not a good thing... currently deactivated
 		instruct +=
 			'This is the content of the web pages returned from the search engine, as a json object, for the query: **' + query + '**.\n'
 			+ 'Each page content is described in the property `query_results.pages[pageId]`, with the schema: `{url,title,lang,text}`' + '.\n'
-			+ 'Extract the most relevant texts related to the query from the properties `text` and `summary`' + '.\n'
+			+ 'the texts obtained from the search are grouped together for each page in the field `text`' + '.\n'
+			/*+ 'Extract the most relevant texts related to the query from the properties `text` and `summary`' + '.\n'
 			+ 'Respond in a json structure: \n'
 			+ 'Includes a list of indicators of relevancy of each page result'
 			+ '- includes a summary of maximum 10 lines.\n'
 			+ '- includes the list of urls (qualified with a description) of the more relevants media audio, video and images\n'
 			+ "If you don't find any relevant information in the provided results, just indicates it, do not performs another search.\n"
-			+ '\n'
+			+*/ '\n'
 
 		doc +=
 			'This is the content of the web pages returned from the search engine, for the query: **"' + query + '"**.\n'
-			+ 'Each page content is described by a section starting by a markdown title.`##`:\n'
-			+ '- Above the title a bullet list indicates document properties: \n\t- url,\n\t- title\n\t- lang\n\t- id' + '\n'
+			+ 'Each page content is described in the property `query_results.pages[pageId]`, with the schema: `{url,title,lang,text}`' + '.\n'
+			+ 'the texts obtained from the search are grouped together for each page in the field `text`' + '.\n'
+
+			/*+ '- Above the title a bullet list indicates document properties: \n\t- url,\n\t- title\n\t- lang\n\t- id' + '\n'
 			+ '- Above the document properties after a line break is the location of the text of the document'
 			+ 'Extract the most relevant texts related to the query from the properties `text` and `summary`' + '.\n'
 			+ 'Respond with a summary of maximum 10 lines.\n'
 			+ "If you don't find any relevant information in the provided results, just indicates it, do not performs another search.\n"
-			+ '\n'
+			*/+ '\n'
 
 		const dat = {
 			query_results: {
@@ -119,9 +124,11 @@ export default class WebSearchTool extends AITool {
 						url: cp.url,
 						title: cp.content?.title,
 						lang: cp.content?.lang,
+						/* TODO: an option
 						videos: cp.content.videos,
 						images: cp.content.images,
 						links: cp.content.links,
+						*/
 						text: txt,
 						id: id
 					})
@@ -133,25 +140,27 @@ export default class WebSearchTool extends AITool {
 					doc += '\n\n'
 					doc += txt
 
-					doc += '\n\n### links\n\n'
-					cp.content.links.forEach(link => {
-						doc += `- ${link.text}\n`
-						doc += `\t- ${link.url}\n`
-					});
+					if (false) {
+						doc += '\n\n### links\n\n'
+						cp.content.links.forEach(link => {
+							doc += `- ${link.text}\n`
+							doc += `\t- ${link.url}\n`
+						});
 
-					doc += '\n\n### images\n\n'
-					cp.content.images.forEach(img => {
-						doc += `- ${img.alt} - ${img.width}x${img.height}\n`
-						doc += `\t- ${img.url}\n`
-					});
+						doc += '\n\n### images\n\n'
+						cp.content.images.forEach(img => {
+							doc += `- ${img.alt} - ${img.width}x${img.height}\n`
+							doc += `\t- ${img.url}\n`
+						});
 
-					doc += '\n\n### videos\n\n'
-					cp.content.videos.forEach(vid => {
-						doc += `- ${vid.alt} - ${vid.width}x${vid.height}\n`
-						doc += `\t- ${vid.url}\n`
-					});
+						doc += '\n\n### videos\n\n'
+						cp.content.videos.forEach(vid => {
+							doc += `- ${vid.alt} - ${vid.width}x${vid.height}\n`
+							doc += `\t- ${vid.url}\n`
+						});
+					}
 
-					this.ctx.components.output.appendLine(
+					output(dialogContext,
 						'add link result: sp #' + pageNumber + ', link #' + linkNumber + ', size=' + txt.length)
 				}
 			}
@@ -162,7 +171,7 @@ export default class WebSearchTool extends AITool {
 				else
 					dat.query_results.summary = sp.aiContent
 
-				this.ctx.components.output.appendLine('add aiContent result: sp #' + pageNumber)
+				output(dialogContext, 'add aiContent result: sp #' + pageNumber)
 			}
 		}
 
@@ -179,5 +188,6 @@ export default class WebSearchTool extends AITool {
 		writeFileSync('tmp/search-response-json.md', trt)
 		//const rt = this.textResult(doc)
 		return rt
+		//return this.jsonPlainResult(dat)	// json only
 	}
 }
