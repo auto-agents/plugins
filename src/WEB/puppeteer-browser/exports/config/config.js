@@ -1,3 +1,5 @@
+import { noiseSuppressBySentenceWordCount } from "../../../../../../shared/src/utils/text/text";
+
 export default function config(ctx) {
 
 	return {
@@ -75,7 +77,11 @@ export default function config(ctx) {
 								reusePage: true,
 								// max tabs (resps. scraps) to perform simultaneously
 								maxTabs: 3,
-								differDelay: 500
+								differDelay: 500,
+								minWordsPerSentence: 5,
+								textProcessors: [
+									s => noiseSuppressBySentenceWordCount(s)
+								]
 							},
 							['page-scraper']: {
 								file: 'page-scraper.js',

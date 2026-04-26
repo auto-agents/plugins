@@ -103,9 +103,9 @@ export default class WebSearchTool extends AITool {
 
 			var hasContent = false
 
-			doc += '## results n°' + pageNumber + ' \n\n'
+			doc += '## results page n°' + pageNumber
 			if (dat.query_results.summary) {
-				doc += '## summary: \n\n' + dat.query_results.summary + '\n\n'
+				doc += '\n\n## summary: \n\n' + dat.query_results.summary
 			}
 
 			for (const [linkNumber, cp] of Object.entries(sp.content)) {
@@ -138,7 +138,7 @@ export default class WebSearchTool extends AITool {
 					}
 					dat.query_results.pages.push(d)
 
-					doc += '## ' + cp.content.title + '\n\n'
+					doc += '\n\n## ' + cp.content.title + '\n\n'
 					doc += `- url: [${cp.url}](${cp.url})\n`
 					doc += `- lang: ${cp.content.lang}\n`
 					doc += `- id: ${id}\n`
@@ -164,6 +164,8 @@ export default class WebSearchTool extends AITool {
 							doc += `\t- ${vid.url}\n`
 						});
 					}
+
+					doc += '\n\n'
 
 					output(dialogContext,
 						'add link result: sp #' + pageNumber + ', link #' + linkNumber + ', size=' + txt.length)

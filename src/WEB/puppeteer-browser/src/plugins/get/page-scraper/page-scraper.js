@@ -99,6 +99,12 @@ export default class PageScraper extends PupeteerPlugin {
                     const scrapContentScript = this.#getScript(this.config.scripts.scrapContent)
                     const res = await page.evaluate(scrapContentScript)
 
+                    // 3. run text processors
+                    if (res)
+                        this.plugin.config.plugins.get.getOptions.textProcessors.forEach(tp => {
+                            res.text = tp(res.text)
+                        });
+
                     pageInfo.content = res
                     output(dcx, 'page ' + pageInfo.id + ' done ✔️')
                     return pageInfo

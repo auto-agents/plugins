@@ -14,6 +14,9 @@ console.log('puppeteer: added utils.js')
     }, ms);
 });*/
 
+window.excludedTagNames = ['script', 'noscript', 'style', 'iframe', 'img', 'link']
+window.ucExcludedTagNames = window.excludedTagNames.map(x => x.toUpperCase())
+
 /**
  * scrap text content only recursively from a node
  * @param {HTMLElement} node 
@@ -24,15 +27,20 @@ window.textContent = (node, f) => {
     var r = ''
     var childs = node.childNodes.values().toArray()
     if (childs.length == 0) {
-        if (node.nodeType == 3 && node.textContent && node.textContent.trim().length > 0)
+        if (node.nodeType == 3 && node.textContent && node.textContent.trim().length > 0) {
+            console.log('fetch: ' + node.textContent)
+            console.log(node)
             return '\n' + node.textContent
+        }
         return ''
     }
     childs.forEach(c => {
-        if (c.tagName != 'SCRIPT' && c.tagName != 'STYLE'
-            && c.tagName != 'script' && c.tagName != 'style'
+        if (!window.excludedTagNames.includes(c.tagName)
+            && !window.ucExcludedTagNames.includes(c.tagName)
         )
             r += f(c, f)
+        //else
+        //    console.log('reject tag name: ' + c.tagName)
     })
     return r
 }
