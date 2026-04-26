@@ -120,18 +120,23 @@ export default class WebSearchTool extends AITool {
 
 				if (hasContent && cp) {
 					const id = pageNumber + '-' + linkNumber
-					dat.query_results.pages.push({
+					var d = {
 						url: cp.url,
 						title: cp.content?.title,
 						lang: cp.content?.lang,
-						/* TODO: an option
-						videos: cp.content.videos,
-						images: cp.content.images,
-						links: cp.content.links,
-						*/
 						text: txt,
 						id: id
-					})
+					}
+					if (false) {
+						// TODO: an option
+						d = {
+							...d,
+							videos: cp.content.videos,
+							images: cp.content.images,
+							links: cp.content.links
+						}
+					}
+					dat.query_results.pages.push(d)
 
 					doc += '## ' + cp.content.title + '\n\n'
 					doc += `- url: [${cp.url}](${cp.url})\n`
