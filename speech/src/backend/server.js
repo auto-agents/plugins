@@ -98,9 +98,14 @@ export default class SpeechServer {
 		this.wss = wss
 
 		return new Promise((resolve) => {
-			server.listen(this.config.port, () => {
-				resolve()
-			})
+			try {
+				server.listen(this.config.port, () => {
+					resolve(true)
+				})
+			} catch (err) {
+				//throw err
+				resolve(false)
+			}
 		})
 	}
 
