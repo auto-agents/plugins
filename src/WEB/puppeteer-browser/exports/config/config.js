@@ -11,7 +11,7 @@ export default function config(ctx) {
 				category: 'WEB',
 
 				autoLoad: true,
-				enabled: true,
+				enabled: false,	/* deacticated */
 				isLoaded: false,
 				internal: false,
 
