@@ -80,9 +80,9 @@ export default class SpeechPlugin {
 		try {
 			if (this.server) return
 			this.server = new SpeechServer({ config: this.config })
-			await this.server.start()
+			return await this.server.start()
 		} catch (err) {
-			throw new Error('launch server error: ' + err.message)
+			/*throw new Error*/ return ('launch server error: ' + err?.message)
 		}
 	}
 

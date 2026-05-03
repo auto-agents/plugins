@@ -18,7 +18,7 @@ export default class SpeechServer {
 		this.httpSockets = new Set()
 	}
 
-	start() {
+	async start() {
 		const app = express()
 		app.use(express.json({ limit: '1mb' }))
 
@@ -97,16 +97,21 @@ export default class SpeechServer {
 		this.server = server
 		this.wss = wss
 
-		return new Promise((resolve) => {
+		server.on('error', e => {
+			console.error('ERROR', e)
+		})
+
+		const r = await new Promise((resolve) => {
 			try {
 				server.listen(this.config.port, () => {
-					resolve(true)
+					resolve(null)
 				})
 			} catch (err) {
 				//throw err
-				resolve(false)
+				resolve(err)
 			}
 		})
+		return r
 	}
 
 	stop() {
