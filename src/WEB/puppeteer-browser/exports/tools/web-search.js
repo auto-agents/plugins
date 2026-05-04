@@ -1,4 +1,4 @@
-import AITool from "../../../../../../shared/src/components/ai-tools/ai-tool"
+import AITool from "../../../../../../shared/src/components/ai/tools/ai-tool"
 import Logger from "../../../../../../shared/src/components/sys/logger"
 import { cmd, mdBlockJson, nonEmpty, output, toJson } from "../../../../../../shared/src/utils/utils"
 import { writeFileSync } from 'fs';
